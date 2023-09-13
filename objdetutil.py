@@ -27,22 +27,23 @@ def gather_data(pan_json, image_dir, image_id):
     if (ann is None):
         print('bad annotation or image id', image_id)
         return None
-    img = cv2.imread(os.path.join(image_dir, ann['file_name']))
-    if (img is None):
-        print('bad image', ann['file_name'])
-        return None
-    b, g, r = img.transpose(2, 0, 1)
+    # img = cv2.imread(os.path.join(image_dir, ann['file_name']))
+    # if (img is None):
+    #     print('bad image', ann['file_name'])
+    #     return None
+    # b, g, r = img.transpose(2, 0, 1)
     for seg in ann['segments_info']:
         cat_id = seg['category_id']
-        cat_name = class_names[cat_id]
         id = seg['id']
         bbox = seg['bbox']
-        # things
-        if (not cat_name in objects):
-            objects[cat_name] = []
-        objects[cat_name].append({
-            'bbox': bbox,
-        })
+        if (cat_id < 20):
+            cat_name = class_names[cat_id]
+            # things
+            if (not cat_name in objects):
+                objects[cat_name] = []
+            objects[cat_name].append({
+                'bbox': bbox,
+            })
     
     res = {
         'objects': objects,
