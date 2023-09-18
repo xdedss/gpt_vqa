@@ -105,13 +105,14 @@ def extract_code_blocks(markdown_text):
 
 
 
-def write_code_to_answer(question, ann_obj):
+def write_code_to_answer(question, ann_obj, *, has_seg=True):
     # replace the annotations with necessary ellipsis
+    seg_related = '' if not has_seg else '''Segmentation masks are np arrays of bool. '''
     prompt = f'''here is a python annotation object we already have:
 
 labels = {format_json(ann_obj)}
 
-Segmentation masks are np arrays of bool. Bounding boxes are in format of top left x, y, w, h. The lists are unsorted. Please add python code below that can print the answer to the following question:
+{seg_related}Bounding boxes are in format of top left x, y, w, h. The lists are unsorted. Please add python code below that can print the answer to the following question:
 
 {question}
 
@@ -154,11 +155,11 @@ with open('temp.pkl', 'rb') as f:
 
 
 
-def make_questions(ann_obj):
-    prompt = f'''given objects and segmentation labels of an image, propose 10 questions that can be answered with a single sentence, without any other additional information.
-
-example of questions:
-Counting questions:
+def make_questions(ann_obj, *, has_seg=True, override_examples=None):
+    seg_related = '' if not has_seg else '''Area question:
+What is the area of all houses in pixels?
+What is the proportion of waterbody area?'''
+    examples = f'''Counting questions:
 How many persons are in the image?
 How many vehicles are there on the road?
 Existence questions:
@@ -171,9 +172,13 @@ Size questions:
 What is the size of the smallest car object?
 What is the size of the cat object?
 How tall is the person on the right?
-Area question:
-What is the area of all houses in pixels?
-What is the proportion of waterbody area?
+{seg_related}'''
+    if (override_examples is not None):
+        examples = override_examples
+    prompt = f'''given objects and segmentation labels of an image, propose 10 questions that can be answered with a single sentence, without any other additional information.
+
+example of questions:
+{examples}
 
 example of labels:
     labels = {format_json(ann_obj)}

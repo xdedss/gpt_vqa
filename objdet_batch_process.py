@@ -14,11 +14,25 @@ import openai.error
 import objdetutil
 import pantest
 
+override_examples = '''Counting questions:
+How many aircrafts are in the image?
+How many SU-27 are there?
+Existence questions:
+Are there any F15 in the image?
+Are there any US fighter jets?
+Location questions:
+Where is the F15 located in the image?
+Where is the largest aircraft?
+Size questions:
+What is the size of the smallest aircraft?
+What is the size of the F-15 object?
+How tall is the aircraft on the right?'''
+
 def make_question_until_success(labels):    
     questions = None
     while (True):
         try:
-            questions = pantest.make_questions(labels).strip().split('\n')
+            questions = pantest.make_questions(labels, has_seg=False, override_examples=override_examples).strip().split('\n')
             if (questions is not None and len(questions) == 10):
                 break
             else:
@@ -35,7 +49,7 @@ def write_code_to_answer_retry(labels, q, retry_tokens=10):
     ans = None
     while retry_tokens > 0:
         try:
-            code, ans = pantest.write_code_to_answer(q, labels)
+            code, ans = pantest.write_code_to_answer(q, labels, has_seg=False)
             if (ans is None):
                 retry_tokens -= 2
             elif (ans.strip() == ''):
