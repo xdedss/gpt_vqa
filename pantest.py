@@ -116,7 +116,7 @@ labels = {format_json(ann_obj)}
 
 {question}
 
-For yes/no questions, print True/False. For other questions, print the answer directly without format.
+You should print the answer with brief format.
 '''
     util_log('=============== write code to answer ===============')
     util_log(prompt)
