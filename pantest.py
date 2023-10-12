@@ -157,21 +157,21 @@ with open('temp.pkl', 'rb') as f:
 
 def make_questions(ann_obj, *, has_seg=True, override_examples=None):
     seg_related = '' if not has_seg else '''Area question:
-What is the area of all houses in pixels?
-What is the proportion of waterbody area?'''
+What is the area of all xxx in pixels?
+What is the proportion of xxx area?'''
     examples = f'''Counting questions:
-How many persons are in the image?
-How many vehicles are there on the road?
+How many xxx are in the image?
+How many xxx are there on the [type of mask]?
 Existence questions:
-Are there any cars in the image?
-Are there houses on the dirt?
+Are there any xxx in the image?
+Are there xxx on the [type of mask]?
 Location questions:
-Where is the cat located in the image?
-Where is the largest house?
+Where is the xxx located in the image?
+Where is the largest xxx?
 Size questions:
-What is the size of the smallest car object?
-What is the size of the cat object?
-How tall is the person on the right?
+What is the size of the smallest xxx object?
+What is the size of the xxx object?
+How tall/wide is the xxx on the right/left?
 {seg_related}'''
     if (override_examples is not None):
         examples = override_examples
