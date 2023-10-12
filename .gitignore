@@ -177,5 +177,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 annotated*
+objdet_annotated*
 temp*
 log.txt
