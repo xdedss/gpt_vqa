@@ -178,5 +178,6 @@ pyrightconfig.json
 
 annotated*
 objdet_annotated*
-temp*
+temp.pkl
+temp.py
 log.txt

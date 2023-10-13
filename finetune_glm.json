@@ -1,0 +1,287 @@
+[
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "右边的房子有多高？",
+        "label": "右边的房子有73像素高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "所有小房子的像素面积是多少？",
+        "label": "所有小房子的总像素面积为2908。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "街上有游泳池吗？",
+        "label": "不，街上没有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "图片中的住宅楼在哪里？",
+        "label": "住宅楼位于图像中的不同坐标处，具有不同的宽度和高度。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "车辆物体的大小是多少？",
+        "label": "我们不知道车辆物体的大小。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/1.png",
+        "prompt": "以像素为单位的所有土壤的面积是多少？",
+        "label": "所有土壤的总面积（以像素为单位）为170372。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "图片上有小房子吗？",
+        "label": "是的，在图片中可以看到一些小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "最大的房子在哪里？",
+        "label": "最大的房子位于坐标（9331）处，大小为26969像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "图片上有街道吗？",
+        "label": "是的，图片确实显示了街道。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "最大的运动场在哪里？",
+        "label": "最大的运动场位于坐标（397358）处，宽105，高147。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "最小的游泳池物体有多大？",
+        "label": "最小的游泳池对象的大小为1517像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/2.png",
+        "prompt": "所有运动场的像素面积是多少？",
+        "label": "所有运动场的总面积（像素）为25605。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "有多少个对象被标记为House？",
+        "label": "有5个对象标记为House。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积占总面积的0.91%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "以像素为单位的所有街道段的面积是多少？",
+        "label": "所有街道段的总面积为3383个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "图像中没有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "右边的车有多高？",
+        "label": "由于未检测到车辆边界框，因此无法确定右侧车辆的高度。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/3.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "注释对象中未指定Vehicle对象的大小。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "最大的房子在哪里？",
+        "label": "最大的房子位于坐标[79，23]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "图片中游泳池的位置是什么？",
+        "label": "图像中的游泳池可以在坐标（x=428，y=59）处找到。它的宽度为28个单位，高度为34个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象的大小为252。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "在图片中，总共有12栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "右边的房子有多高？",
+        "label": "右边的房子有22个像素高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/4.png",
+        "prompt": "最大的房子在哪里？",
+        "label": "最大的房子位于（x=79，y=23），宽143个单元，高146个单元。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "街上有游泳池吗？",
+        "label": "不，街上没有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象的大小为2133。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "所有小房子的像素面积是多少？",
+        "label": "以像素为单位，所有小房子的总面积为1020。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中有13栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "图片中的小房子在哪里？",
+        "label": "小房子位于图像中的位置（171157），宽度为34，高度为30。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/5.png",
+        "prompt": "街上有游泳池吗？",
+        "label": "不，街上没有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "最小的车辆对象的大小为192平方像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "以像素为单位的所有土壤的面积是多少？",
+        "label": "以像素为单位的土壤总面积为159247。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中总共有9栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "图片中的游泳池在哪里？",
+        "label": "游泳池位于图像中的不同坐标处，并且具有不同的宽度和高度尺寸。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "街上有车吗？",
+        "label": "是的，街上有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/6.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋面积为930平方米。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象的大小为1260。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中可以看到11栋房屋。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "路附近有小房子吗？",
+        "label": "不，路边没有小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "图像中有多少个土壤片段？",
+        "label": "在图像中，有512段土壤。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "街上有车吗？",
+        "label": "不，由于缺少一些信息，我们无法确定街上是否有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/7.png",
+        "prompt": "图片中的商业大厦在哪里？",
+        "label": "商业大厦可以在坐标（177184）的图像中找到。它的宽度为143个像素，高度为128个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "运动场面积的比例是多少？",
+        "label": "运动场面积占总面积的56.17%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "图片中的游泳池在哪里？",
+        "label": "图像中的游泳池可以在坐标（x＝331，y＝460）处找到，并且具有40像素的宽度和44像素的高度。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆高度为14个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "最小的物体有多大？",
+        "label": "最小的物体大小为96。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "图像中有多少个对象？",
+        "label": "图像中有16个对象。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/8.png",
+        "prompt": "物体位于土壤段的何处？",
+        "label": "这些物体可以在土壤段的不同位置找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "最大的小房子在哪里？",
+        "label": "最大的小房子位于坐标[72397,39,36]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "街上有游泳池吗？",
+        "label": "是的，街上有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "在图像中，车辆位于坐标（119194）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "左边的车有多高？",
+        "label": "左边的车有14英尺高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（112187）处，宽度为15个单位，高度为14个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/9.png",
+        "prompt": "车辆物体的大小是多少？",
+        "label": "车辆对象的大小为210像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "土地上有房子吗？",
+        "label": "不，地上没有房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积占总面积的6.65%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "图片中有多少栋小房子？",
+        "label": "图片中总共有8栋小房子。"
+    }
+]

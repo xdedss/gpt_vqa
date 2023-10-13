@@ -5,7 +5,7 @@ import os
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 openai.api_base = os.environ.get('OPENAI_API_BASE')
 
-def ask_once(system, user_question):
+def ask_once(system, user_question: str) -> str:
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
