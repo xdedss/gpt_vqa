@@ -283,5 +283,1155 @@
         "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
         "prompt": "图片中有多少栋小房子？",
         "label": "图片中总共有8栋小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象大小为224。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "以像素为单位的所有土壤的面积是多少？",
+        "label": "以像素为单位的土壤总面积为136175。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/10.png",
+        "prompt": "图片中有游泳池吗？",
+        "label": "是的，图中有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "左边的房子有多高？",
+        "label": "左边的房子有112个单元高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "最小的小房子有多大？",
+        "label": "最小的小房子有360平方单位的大小。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "图片中有运动场吗？",
+        "label": "是的，图片中有运动场地。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "所有商业建筑的像素面积是多少？",
+        "label": "所有商业建筑的总面积为135131像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "最大的商业建筑在哪里？",
+        "label": "最大的商业建筑群位于坐标[99112159135]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/11.png",
+        "prompt": "图像中的土壤在哪里？",
+        "label": "在图片中可以看到土壤。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "图片中的小房子在哪里？",
+        "label": "图像中的小房子位于坐标（432135）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "街上有游泳池吗？",
+        "label": "是的，街上有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "游泳池的物体有多大？",
+        "label": "游泳池对象的大小为512 x 512。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标（176351）处找到，宽度为19，高度为16。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "最小的住宅建筑对象的大小是多少？",
+        "label": "最小的Residential Building对象的大小为525。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/12.png",
+        "prompt": "街上有车吗？",
+        "label": "缺少关于车辆类型或问题中的位置（街道）的信息。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "游泳池的物体有多大？",
+        "label": "游泳池对象的大小为8071像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积约占总面积的3.23%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "车辆位于图像中的不同坐标处，具有特定的宽度和高度测量值。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "图像中的土壤在哪里？",
+        "label": "在图像中，土壤位于所有区域。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "土壤面积的比例是多少？",
+        "label": "土壤面积的比例约为26.73%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/13.png",
+        "prompt": "图片中有街道吗？",
+        "label": "是的，图像中可以看到街道。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "图片中的游泳池在哪里？",
+        "label": "游泳池位于以下坐标处：\n-（x:99，y:301）\n-（x：373，y：50）\n-（x：47，y：228）\n-（x：5，y：150）\n-（x：179，y：403）\n-（x：445，y：196）\n-（x：135，y：365）\n-（x：327，y：0）"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "街上有小房子吗？",
+        "label": "是的，街上有一些小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "图片中有车辆吗？",
+        "label": "是的，图像中有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "所有运动场的像素面积是多少？",
+        "label": "所有运动场的像素面积均为零。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "足球场上有运动场吗？",
+        "label": "不，足球场上没有运动场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/14.png",
+        "prompt": "最小的Boat物体有多大？",
+        "label": "最小的Boat对象的大小为无穷大。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "图像中有泥土物体吗？",
+        "label": "是的，图像中有一些由泥土制成的物体。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "以像素为单位的所有游泳池的面积是多少？",
+        "label": "以像素为单位，所有游泳池的总面积为6170。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "游泳池的物体有多大？",
+        "label": "游泳池对象的大小为1802平方像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（168197）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "图片中有多少辆车？",
+        "label": "图片中有两辆车。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/15.png",
+        "prompt": "街道面积的比例是多少？",
+        "label": "街道面积的比例为4.48%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "有多少物品被标记为运动场？",
+        "label": "只有一个物体被标记为运动场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "图片上有小房子吗？",
+        "label": "是的，图中有一些小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "最小的运动场物体有多大？",
+        "label": "最小的运动场物体大小为9898。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "图像中车辆面积的比例是多少？",
+        "label": "图像中的车辆面积占总面积的0.00%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "最小的Commertial Building Block对象的大小是多少？",
+        "label": "最小的商业建筑块对象的大小是无限的。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/16.png",
+        "prompt": "最大的车辆位于哪里？",
+        "label": "没有关于最大车辆位置的信息。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "左边的房子有多高？",
+        "label": "左边的房子有83英尺高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "以像素为单位的所有土壤的面积是多少？",
+        "label": "所有土壤的总面积（以像素为单位）为37684。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "图像中有多少个对象？",
+        "label": "在图像中，有两个对象。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "房子在图片中的位置？",
+        "label": "房子位于图片中的坐标（0，137）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "以像素为单位的所有房屋的面积是多少？",
+        "label": "以像素为单位，所有房屋的总面积为4565。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/17.png",
+        "prompt": "图片中有多少个游泳池？",
+        "label": "图片中没有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "图像中有土壤片段吗？",
+        "label": "是的，图像的某些部分显示了土壤。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象大小为2112。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "口罩上有游泳池吗？",
+        "label": "是的，面具有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "所有车辆的像素面积是多少？",
+        "label": "车辆没有任何像素区域。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "最小的车辆对象的大小为32。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/18.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在港口找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "图片中有足球场吗？",
+        "label": "是的，图像中可以看到足球场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "所有房屋的像素面积是多少？",
+        "label": "以像素为单位，所有房屋的总面积为122647。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "足球场面积的比例是多少？",
+        "label": "足球场的面积比例为7.46万平方米。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "Vehicle对象的大小为1249。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "最小的商业建筑的尺寸是多少？",
+        "label": "最小的商业建筑对象具有以平方为单位的无限大小。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/19.png",
+        "prompt": "图片中有商业建筑吗？",
+        "label": "不，图片中没有任何商业建筑。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "所有足球场的像素面积是多少？",
+        "label": "所有足球场的总面积为25810个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "最大的房子在哪里？",
+        "label": "最大的房子位于坐标（249363）处，尺寸为180x119。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "足球场的物体有多大？",
+        "label": "足球场对象的大小为25810。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "所有车辆的像素面积是多少？",
+        "label": "所有车辆的总面积（以像素为单位）为1712。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "最小的商业建筑有多大？",
+        "label": "最小的商业建筑面积为119。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/20.png",
+        "prompt": "土壤面积的比例是多少？",
+        "label": "土壤面积比例为175.48%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/21.png",
+        "prompt": "图片中的运动场在哪里？",
+        "label": "在图中，您可以在坐标（0，153）处找到运动场。它的宽度为36，高度为52。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/21.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积占总面积的1.30%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/21.png",
+        "prompt": "图片中的小房子在哪里？",
+        "label": "小房子位于图像中的不同位置：\n-在宽度为20、高度为23个像素的位置（69、87）处。\n-在宽度为47、高度为43个像素的位置（235416）处。\n-在宽度为30、高度为19个像素的位置（290493）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/21.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "图像中的车辆位于坐标[321169,14,19]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/21.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积占比为1.44%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "图片中有游泳池吗？",
+        "label": "是的，图中有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积占总面积的7.69%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中总共有9栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "图片中有多少商业建筑？",
+        "label": "图片中没有商业建筑。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "这辆车的尺寸是多少？",
+        "label": "车辆长18个单元，宽14个单元。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/22.png",
+        "prompt": "图片中有土壤吗？",
+        "label": "是的，图像中有泥土。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "Vehicle对象的大小为10330。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "所有车辆的面积（以像素为单位）是多少？",
+        "label": "所有车辆的总面积（以像素为单位）为10330。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "图片中有多少栋小房子？",
+        "label": "图片中有一座小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "土壤覆盖了多少像素？",
+        "label": "总共有151563个像素被土壤覆盖。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "这辆车的尺寸是多少？",
+        "label": "车辆的尺寸为180平方像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/23.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（468488）处，尺寸为17宽18高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "图像中最大的车辆位于何处？",
+        "label": "图像中最大的车辆位于左上角，x坐标为324，y坐标为465，宽度为19，高度为13。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "左边的商业大厦有多高？",
+        "label": "左边的商业大厦高62像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "以像素为单位的所有游泳池对象的面积是多少？",
+        "label": "所有游泳池对象的总面积为4012像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "图片中的商业大厦在哪里？",
+        "label": "商业大厦位于图片中的坐标（440500）处，宽23，高12。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "图片中有多少商业建筑砌块？",
+        "label": "图片中有三个商业建筑块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/24.png",
+        "prompt": "图片中街道面积的比例是多少？",
+        "label": "在图片中，街道面积约占总面积的38.13%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "这座商业大楼有多大？",
+        "label": "这座商业建筑的尺寸为117像素乘146像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "左边的车有多高？",
+        "label": "左边的车辆有18个单元高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋被测量为24平方单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "所有车辆的面积（以像素为单位）是多少？",
+        "label": "所有车辆的总面积（以像素为单位）为9283。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "商业建筑面积的比例是多少？",
+        "label": "商业建筑面积占总面积的2.14%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/25.png",
+        "prompt": "土地上有车辆吗？",
+        "label": "地面上有车辆吗？\n是的，地面上有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "图像中有多少House对象？",
+        "label": "图像中总共有8个House对象。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "最大的房子有多大？",
+        "label": "最大的房屋面积为16744。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆高18像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标（x=461，y=281）处找到，宽度为19，高度为11。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "商业积木的大小是多少？",
+        "label": "该商业建筑砌块的面积为71000平方单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/26.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积的比例约为1.87%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中总共有11栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "最小的小房子有多大？",
+        "label": "最小的小房子对象的大小为32。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "图片中的游泳池在哪里？",
+        "label": "游泳池可以在图像中的坐标x＝127和y＝423处找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "图片中游泳池面积的比例是多少？",
+        "label": "图片中的游泳池面积占总面积的1.44%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "最小的房子有多大？",
+        "label": "最小的房屋对象的大小为（79，9）。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/27.png",
+        "prompt": "街上有几个游泳池？",
+        "label": "街上没有游泳池。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "图片中有多少栋房子？",
+        "label": "图片中总共有12栋房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "最大的房子在哪里？",
+        "label": "最大的房子可以在坐标[1413383182129]处找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "房屋面积的比例是多少？",
+        "label": "房屋面积占比91.29%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "最大的商业建筑面积是多少信息中未指定最大商业建筑砌块的大小。",
+        "label": "A： 未指定最大商业建筑块的大小。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "图片中有住宅楼吗？-是的，图中有一栋住宅楼。",
+        "label": "图片中有住宅楼吗？-是的，图中有一栋住宅楼。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/28.png",
+        "prompt": "所有商业建筑的像素面积是多少？-信息中未规定所有商业建筑的像素面积。",
+        "label": "该信息没有以像素为单位指定所有商业建筑的面积。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "所有房屋的像素面积是多少？",
+        "label": "以像素为单位，所有房屋的总面积为137264像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "车辆物体的大小是多少？",
+        "label": "车辆对象尺寸为18 x 13。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "游泳池面积的比例是多少？",
+        "label": "游泳池面积占总面积的1.85%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "右边的车有多高？",
+        "label": "右边的车辆有18个单元高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标（305478）处找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/29.png",
+        "prompt": "图片中有商业建筑吗？",
+        "label": "不，图像中没有可见的商业建筑。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "给定的面具上有多少个水体？",
+        "label": "给定的面具上没有水体。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "图像中有多少个对象？",
+        "label": "图像中没有对象。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "最大的水体有多大？",
+        "label": "最大的水体大小为512。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "图片中有多少栋住宅楼？",
+        "label": "图片中没有住宅楼。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "最大的汽车有多大？",
+        "label": "最大的车辆尺寸为0。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/30.png",
+        "prompt": "图片中的商业大厦在哪里？",
+        "label": "图像的注释中没有商业建筑的标签。所以，我们不知道它在哪里。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "图像中最大的物体在哪里？",
+        "label": "图像中最大的物体位于水体中。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "图片中有水体吗？",
+        "label": "是的，图像中有水体。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "水体面积的比例是多少？",
+        "label": "水体面积占总面积的100.00%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "土地上有房子吗？",
+        "label": "不，地上没有房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "左边的车有多高？",
+        "label": "A： 我无法确定左侧车辆的高度，因为没有指定的标签。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/31.png",
+        "prompt": "最小的游泳池物体有多大？",
+        "label": "没有游泳池的物体，所以没有最小的物体那么大。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "图像中有多少个Commertial Building Block对象？",
+        "label": "图像中有三个Commercial Building Block对象。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆高度为12像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "以像素为单位的所有土壤对象的面积是多少？",
+        "label": "所有土壤对象的总面积（以像素为单位）为162120。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "图片中有多少辆车？",
+        "label": "图片中总共有30辆车。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "左边的商业建筑有多宽？",
+        "label": "左边的商业构建块有202个像素宽。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/32.png",
+        "prompt": "土壤面积的比例是多少？",
+        "label": "土壤面积占总面积的61.84%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标（191421）处找到。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "图片上有多少块商业建筑？",
+        "label": "图中显示了两个商业构建块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "图片中有多少个运动场？",
+        "label": "在图片中，有两个运动场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "图片中最大的商业建筑群在哪里？",
+        "label": "最大的商业建筑块位于图像左上角的坐标（x=148，y=77）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "以像素为单位的所有商业构建块的面积是多少？",
+        "label": "所有商业建筑块的面积为119448像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/33.png",
+        "prompt": "街道面积的比例是多少？",
+        "label": "街道面积的比例为7.77%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "图像中是否有土壤片段？",
+        "label": "是的，图像中有一些土壤片段。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "右边的车有多高？",
+        "label": "A： 右侧的车辆高9像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "最小的Vehicle对象的大小为88。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "所有小房子的像素面积是多少？",
+        "label": "所有小房子的总面积（以像素为单位）为117048。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "图片上有运动场吗？",
+        "label": "不，图片中没有运动场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/34.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "Vehicle对象的大小为11198。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆有8个单元高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "图片中有可见的街道吗？",
+        "label": "是的，在图片中可以看到一些街道。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标（X:373，Y:412）处找到，大小跨越306个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "图片中有多少个商业构建块？",
+        "label": "图片中有6个商业建筑块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "最小的Vehicle对象大小为27。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/35.png",
+        "prompt": "以像素为单位的所有商业构建块的面积是多少？",
+        "label": "所有商业建筑块的总面积为71316像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "所有车辆的面积（以像素为单位）是多少？",
+        "label": "所有车辆的总面积（以像素为单位）为9946。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "车辆位于图像中的坐标（232150）处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "图片中有多少辆车？",
+        "label": "图片中总共有44辆车。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "图像中车辆面积的比例是多少？",
+        "label": "车辆面积占图像总面积的1.17%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "车辆物体的最小尺寸为88。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/36.png",
+        "prompt": "以像素为单位的所有土壤的面积是多少？",
+        "label": "所有土壤的总面积为148679像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "最小的商业建筑面积是多少？",
+        "label": "最小的商业建筑面积为44。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "图片中有多少商业建筑砌块？",
+        "label": "在图像中，总共有四个商业建筑块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "街道面积的比例是多少？",
+        "label": "街道面积的比例约为21.78%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "土地上有车辆吗？",
+        "label": "是的，地面上有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "图片中有多少辆车？",
+        "label": "图片中有37辆车。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/37.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（47379）处，宽34，高30。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "图片上有多少栋小房子？",
+        "label": "图片中有三座小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "街上有车吗？",
+        "label": "是的，路上有汽车和其他车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "商业大厦有多大？",
+        "label": "商业大厦面积24648平方米。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "最大的运动场在哪里？",
+        "label": "最大的运动场位于"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "“小房子”对象的大小是多少？",
+        "label": "Small House对象的大小为650。\nSmall House对象的大小为780。\nSmall House对象的大小为378。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/38.png",
+        "prompt": "右边的小房子有多高？",
+        "label": "右边的小房子有26英尺高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "口罩上有商业积木吗？",
+        "label": "不，口罩上没有商用成分。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "最小的小房子有多大？",
+        "label": "最小的“小房子”对象大小为117。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "图片中有多少商业建筑？",
+        "label": "图片中有三栋商业建筑。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "图片中有街道吗？",
+        "label": "是的，图像中包含街道。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "图片中有商业积木吗？",
+        "label": "不，图片中没有为商业目的制作的积木。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/39.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积的比例为1.15%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "左边的车有多高？",
+        "label": "左侧的车辆高度为14个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "图像中有土壤片段吗？",
+        "label": "是的，图像中存在一些土壤片段。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（0419）的左上角，宽度为44个单位，高度为36个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积比例为0.70%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "图片中有多少辆车？",
+        "label": "图片中有23辆车。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/40.png",
+        "prompt": "这座商业大楼有多大？",
+        "label": "这座商业建筑的面积为51354。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "图片中有街道片段吗？",
+        "label": "是的，图像中有街道片段。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "车辆对象在图像中的位置？",
+        "label": "车辆对象位于图像中坐标（246240）处，宽度为20像素，高度为19像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "以像素为单位的所有车辆对象的面积是多少？",
+        "label": "所有车辆对象的总面积为1018个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "街道面积的比例是多少？",
+        "label": "街道面积约占总面积的38.42%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "图片中有多少个商业构建块？",
+        "label": "图像中没有商业构建块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/41.png",
+        "prompt": "以像素为单位的所有街道段的面积是多少？",
+        "label": "所有街道路段的总面积（以像素为单位）为98737。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "车辆位于图像中具有不同宽度和高度的不同坐标处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积占总面积的68.83%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "所有街道的像素面积是多少？",
+        "label": "以像素为单位的所有街道的总面积为31563。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "车辆位于图像中的各个坐标处：\n-x=361，y=361\n-x=244，y=430\n-x=399，y=508\n-x=229，y=443\n-x=111，y=481\n-x=388，y=493\n-x=185，y=474\n-x=332，y=502\n-x=152，y=501\n-x=46，y=510\n-x=385，y=458\n-x=185，y=415\n-x=177，y=481\n-x=206，y=400\n-x=408，y=502\n-x=173，y=433\n-x=414，y=437\n-x=369，y=474\n-x=191，y=457\n-x=421，y=447\n-x=74，y=490\n-x=374，y=507\n-x=235，y=436\n-x=160，y=493\n-x=127，y=451\n-x=169，y=487\n-x=204，y=449\n-x=347，y=342\n-x=83，y=485\n-x=220，y=449"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "土地上有车辆吗？",
+        "label": "是的，有车辆停在地上。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/42.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "整车面积占总面积的100.00%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标（84411）处，宽度为17，高度为16。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "最小的Commertial Building Block对象的大小是多少？",
+        "label": "Commertial Building Block对象的最小大小为3552。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积的比例为10%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "车辆位于以下位置：\n1.车辆1位于（x=26，y=484）处，宽度为17，高度为14。\n2.车辆2位于（x=15，y=324）处，宽度为8，高度为11。\n3.车辆3位于（x=99，y=427）处，宽度为18，高度为15。\n4.车辆4位于（x=50，y=299）处，宽度为11，高度为13。\n5.车辆5位于（x=244，y=287）处，宽度为13，高度为13。\n6.车辆6位于（x=59，y=293）处，宽度为10，高度为12。\n7.车辆7位于（x=66，y=426）处，宽度为16，高度为14。\n8.车辆8位于（x=142，y=406）处，宽度为8，高度为9。\n9.车辆9位于（x=228，y=358）处，宽度为15，高度为16。\n10.车辆10位于（x=124，y=383）处，宽度为15，高度为13。\n11.车辆11位于（x=7，y=331）处，宽度为12，高度为12。\n12.车辆12位于（x=161，y=352）处，宽度为18，高度为15。\n13.车辆13位于（x=218，y=343）处，宽度为16，高度为16。\n14.车辆14位于（x=172，y=403）处，宽度为10，高度为11。\n15.车辆15位于（x=195，y=381）处，宽度为12，高度为16。\n16.车辆16位于（x=15，y=265）处，宽度为11，高度为13。\n17.车辆17位于（x=36，y=250）处，宽度为9，高度为11。\n18.车辆18位于（x=124，y=410）处，宽度为18，高度为14。\n19.车辆19位于（x=142，y=368）处，宽度为17，高度为14。\n20.车辆20位于（x=0，y=348）处，宽度为3，高度为9。\n21.车辆21位于（x=177，y=192）处，宽度为11，高度为14。\n22.车辆22位于（x=65，y=286）处，宽度为12，高度为13。\n23.车辆23位于（x=74，y=280）处，宽度为11，高度为13。\n24.车辆24位于（x=34，y=299）处，宽度为11，高度为13。\n25.车辆25位于（x=198，y=357）处，宽度为18，高度为15。\n26.车辆26位于（x=215，y=308）处，宽度为10，高度为14。\n27.车辆27位于（x=21，y=460）处，宽度为17，高度为14。\n28.车辆28位于（x=84，y=411）处，宽度为17，高度为16。\n29.车辆29位于（x=21，y=307）处，宽度为11，高度为12。\n30.车辆30位于（x=165，y=410）处，宽度为13，高度为15。\n31.车辆31位于（x=212，y=370）处，宽度为13，高度为14。\n32.车辆32位于（x=191，y=211）处，宽度为11，高度为13。\n33.车辆33位于（x=220，y=364）处，宽度为13，高度为15。\n34.车辆34位于（x=251，y=297）处，宽度为11，高度为11。\n35.车辆35位于（x=238，y=352）处，宽度为9，高度为12。\n36.车辆36位于（x=199，y=324）处，宽度为15，高度为15。\n37.车辆37位于（x=3，y=283）处，宽度为7，高度为8。\n38.车辆38位于（x=0，y=337）处，宽度为9，高度为12。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧车辆的高度为14个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/43.png",
+        "prompt": "最小的车辆物体的大小是多少？",
+        "label": "最小的车辆对象大小为27个像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆可以在坐标[202235]处找到，该坐标位于左上角。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆有13英尺高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "车辆面积的比例是多少？",
+        "label": "车辆面积的比例为100%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "以像素为单位的所有商业构建块的面积是多少？（答案：所有商业建筑块的面积总和）",
+        "label": "所有商业建筑块的总面积为228860像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "最大的汽车有多大？（答案：17像素）",
+        "label": "最大的车辆尺寸为19像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/44.png",
+        "prompt": "右边的车有多高？（答案：17像素）",
+        "label": "右侧的车辆高17像素。右侧的车辆高14像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "街上有车吗？",
+        "label": "是的，街上有车辆。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "图片中有多少商业建筑砌块？",
+        "label": "图片中有6个商业建筑块。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "Vehicle对象的大小为11774。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆高11像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "商业大厦有多大？",
+        "label": "商业大厦尺寸为28乘86。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/45.png",
+        "prompt": "图片中的小房子在哪里？",
+        "label": "照片中没有看到小房子。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "这条街的面积是多少？",
+        "label": "这条街的面积为49146像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "车辆在图像中的位置？",
+        "label": "图像中的车辆位于坐标x=297和y=209处，宽度为13个单位，高度为14个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "最大的商业建筑在哪里？",
+        "label": "最大的商业建筑区块位于坐标[21720523287]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "土地上有运动场吗？",
+        "label": "不，地上没有运动场。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "以像素为单位的所有商业建筑块的面积是多少？",
+        "label": "所有商业建筑块的总面积为163897像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/46.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标78、85处，宽度为31个单位，高度为25个单位。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "最大的车辆位于哪里？答：最大的车辆位于坐标（x，y），大小为[size]像素。",
+        "label": "最大的车辆可以在坐标（343，0）处找到，它占据了682个像素的空间。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "商业建筑面积的比例是多少？答：商业建筑面积的比例为[比例]。",
+        "label": "约51.10%的面积为商业大厦。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "最小的商业建筑的尺寸是多少？答：最小的商业建筑对象的大小为34x16像素。",
+        "label": "最小的商业建筑对象尺寸为34x16像素。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "这个物体的大小是多少？",
+        "label": "商业建筑对象的大小为544。\nVehicle对象的大小为210。\nVehicle对象的大小为182。\nVehicle对象的大小为154。\nVehicle对象的大小为225。\nVehicle对象的大小为196。\nVehicle对象的大小为143。\nVehicle对象的大小为270。\nVehicle对象的大小为154。\nVehicle对象的大小为120。\nVehicle对象的大小为90。\nVehicle对象的大小为64。\nVehicle对象的大小为168。\nVehicle对象的大小为180。\nVehicle对象的大小为91。\nVehicle对象的大小为224。\nVehicle对象的大小为240。\nVehicle对象的大小为204。\nVehicle对象的大小为50。\nVehicle对象的大小为182。\nVehicle对象的大小为182。\nVehicle对象的大小为361。\nVehicle对象的大小为210。\nVehicle对象的大小为289。\nVehicle对象的大小为99。\nVehicle对象的大小为682。\nVehicle对象的大小为196。\nVehicle对象的大小为255。\nVehicle对象的大小为180。\nVehicle对象的大小为252。\nVehicle对象的大小为120。\nVehicle对象的大小为224。\nVehicle对象的大小为110。\nVehicle对象的大小为240。\nVehicle对象的大小为121。\nVehicle对象的大小为32。\nVehicle对象的大小为182。\nVehicle对象的大小为238。\nVehicle对象的大小为81。\nVehicle对象的大小为64。\nVehicle对象的大小为240。\nVehicle对象的大小为121。\nVehicle对象的大小为169。\nVehicle对象的大小为238。\nVehicle对象的大小为182。\nVehicle对象的大小为195。\nVehicle对象的大小为132。\nCommertial Building Block对象的大小为62764。\nCommertial Building Block对象的大小为55860。\nCommertial Building Block对象的大小为35530。\nCommertial Building Block对象的大小为1980。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "物体面积的比例是多少？",
+        "label": "物体面积约占总面积的63.03%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/47.png",
+        "prompt": "图像中最大的物体在哪里？",
+        "label": "最大的物体位于图像中的坐标x:218，y:0处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "这条街上有多少商业建筑？",
+        "label": "这条街上共有7栋商业建筑。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "街道面积的比例是多少？",
+        "label": "街道面积占总面积的30.99%。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "车辆对象的大小是多少？",
+        "label": "Vehicle对象的大小为56。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "最大的汽车在哪里？",
+        "label": "最大的车辆位于坐标[26441，14，20]处。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "右边的车有多高？",
+        "label": "右侧的车辆有20个单元高。"
+    },
+    {
+        "img": "/hdd0/lzr/bsb_dataset/image_val_png/48.png",
+        "prompt": "以像素为单位的所有商业构建块的面积是多少？",
+        "label": "所有商业建筑块的总面积为205816像素。"
     }
 ]
