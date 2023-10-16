@@ -67,15 +67,15 @@ class AgentBase():
             input_type = tool.inputs[input_key]
             if (input_key not in inputs_designation):
                 return {"success": False, "reason": f"input '{input_key}' of tool is not specified"}
-            # if (input_type == 'text'):
-            #     input_text = inputs_designation[input_key]
-            #     actual_input_dict[input_key] = input_text
-            # else:
-            input_resource_id = inputs_designation[input_key]
-            if (input_resource_id not in self.resources):
-                return {"success": False, "reason": f"resource id {input_resource_id} does not exist"}
+            if (input_type == 'text'):
+                input_text = inputs_designation[input_key]
+                actual_input_dict[input_key] = input_text
             else:
-                actual_input_dict[input_key] = self.resources[input_resource_id]
+                input_resource_id = inputs_designation[input_key]
+                if (input_resource_id not in self.resources):
+                    return {"success": False, "reason": f"resource id {input_resource_id} does not exist"}
+                else:
+                    actual_input_dict[input_key] = self.resources[input_resource_id]
         # check designated outputs exists in the tool
         for output_key in outputs_designation:
             if (output_key not in tool.outputs):
@@ -90,7 +90,11 @@ class AgentBase():
             return {"success": False, "reason": f"ToolError: {e.reason}"}
         except Exception as e:
             return {"success": False, "reason": f"Unexpected error using tool: {e}"}
-        self.resources.update(actual_output_dict)
+        
+        for output_key in outputs_designation:
+            output_resource_id = outputs_designation[output_key]
+            actual_output = actual_output_dict[output_key]
+            self.resources[output_resource_id] = actual_output
         return {"success": True}
             
 
