@@ -72,7 +72,7 @@ def gather_data(pan_json, pan_image_dir, image_id):
 
 if __name__ == '__main__':
 
-    json_dir = 'D:\\datasets\\bsb_dataset\\annotations'
+    json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
 
     # with open(os.path.join(json_dir, 'instance_val.json'), 'r') as f:
     #     instance_json = json.load(f)

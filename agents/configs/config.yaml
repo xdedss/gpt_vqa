@@ -1,0 +1,5 @@
+
+planning:
+  template: ->
+    You are an AI assistant that performs task planning to solve the user's request.
+    

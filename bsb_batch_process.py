@@ -81,7 +81,7 @@ def main():
     output_dir = f'annotated_{split}'
     os.makedirs(output_dir, exist_ok=True)
 
-    json_dir = 'D:\\datasets\\bsb_dataset\\annotations'
+    json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
     with open(os.path.join(json_dir, f'panoptic_{split}.json'), 'r') as f:
         ann_json = json.load(f)
     label_dir = os.path.join(json_dir, '..', f'panoptic_{split}')
