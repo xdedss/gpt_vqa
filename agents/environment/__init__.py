@@ -20,8 +20,8 @@ class ToolError(Exception):
 class Tool():
 
     description = "No description"
-    inputs = {}
-    outputs = {}
+    inputs = []
+    outputs = []
 
     def __init__(self) -> None:
         pass
@@ -39,6 +39,6 @@ class Resource():
     # some other info
     meta = None
 
-    def string_for_llm(self):
+    def detailed_desc(self) -> str:
         raise NotImplementedError()
 

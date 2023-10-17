@@ -1,27 +1,35 @@
 
 
 from . import Tool, ToolError
-
+from .resources import ImageResource, JsonResource
 
 class ImageMetaTool(Tool):
-    ''' this will retrieve certain info from image meta '''
+    ''' this will retrieve certain info from image meta, without wrapping, which means you have to wrap it in image meta '''
     
     description = '(image meta tool)'
 
-    inputs = {
-        'image_input': 'image'
-    }
-    outputs = {
-        'output': 'json'
-    }
+    inputs = [{
+        'name': 'image_input',
+        'type': 'image',
+    }]
+    outputs = [{
+        'name': 'output',
+        'type': 'json',
+    }]
 
-    def __init__(self, key, description) -> None:
+    def __init__(self, key, description, output_type='json') -> None:
         super().__init__()
         self.key = key
         self.description = description
+        outputs = [{
+            'name': 'output',
+            'type': output_type,
+        }]
 
     def use(self, inputs):
         image = inputs['image_input']
+        if (not isinstance(image, ImageResource)):
+            raise ToolError("input type must be image")
         if image.meta is None:
             raise ToolError("image meta does not exists")
         if (self.key not in image.meta):

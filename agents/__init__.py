@@ -63,8 +63,9 @@ class AgentBase():
         actual_input_dict = dict()
         tool = self.tools[id]
         tool: environment.Tool
-        for input_key in tool.inputs:
-            input_type = tool.inputs[input_key]
+        for input_schema in tool.inputs:
+            input_key = input_schema['name']
+            input_type = input_schema['type']
             if (input_key not in inputs_designation):
                 return {"success": False, "reason": f"input '{input_key}' of tool is not specified"}
             if (input_type == 'text'):
@@ -78,7 +79,7 @@ class AgentBase():
                     actual_input_dict[input_key] = self.resources[input_resource_id]
         # check designated outputs exists in the tool
         for output_key in outputs_designation:
-            if (output_key not in tool.outputs):
+            if (output_key not in [schema['name'] for schema in tool.outputs]):
                 return {"success": False, "reason": f"output '{output_key}' does not exist"}
             output_resource_id = outputs_designation[output_key]
             if (output_resource_id in self.resources):

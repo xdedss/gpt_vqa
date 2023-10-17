@@ -9,8 +9,28 @@ class ImageResource(Resource):
         self.data = cv_image
         self.type = 'image'
         self.meta = meta
+    
+    def detailed_desc(self) -> str:
+        return 'An opencv image object'
 
-    def string_for_llm(self):
-        return 'image'
+class JsonResource(Resource):
+
+    def __init__(self, obj) -> None:
+        super().__init__()
+        self.data = obj
+        self.type = 'json'
+    
+    def detailed_desc(self) -> str:
+        return str(self.data)
 
 
+class MasksResource(Resource):
+
+    def __init__(self, masks_dict):
+        super().__init__()
+        self.data = masks_dict
+        self.type = 'masks'
+    
+    def detailed_desc(self):
+        print('formatting', self.data)
+        return f'A dict with these keys: {[k for k in self.data]}, each with a mask of corresponding lable.'
