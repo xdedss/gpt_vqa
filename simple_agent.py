@@ -12,24 +12,32 @@ import jsonschema
 
 import oaapi
 
-def ask_confirm():
-    input('confirm?')
 
 class SimpleAgent(AgentBase):
 
     CONTEXT = '''You are an AI assistant that use tools to solve the user's request. The first stage is planning, where you are provided with informations about the user input, tools available and resources available, and you should make a plan to use tools available to solve the user's request. The second stage is running, where the plan is executed and results are stored in resources database. The third stage is summarizing, where you make conclution to the user's request based on previous stages.
 '''.strip()
+    
+    require_confirm = False
 
     def __init__(self, cfg_node: CN):
         super().__init__(cfg_node)
+    
+    def ask_confirm(self):
+        if (self.require_confirm):
+            res = input('confirm?')
+            if (res.lower() in ['n', 'no']):
+                import sys
+                print('user cancelled action')
+                sys.exit(0)
     
     def one_time_planning(self, input: str):
 
         tool_desc = ''
         for tool_id in self.tools:
             tool: Tool = self.tools[tool_id]
-            inputs_str = str(tool.inputs)
-            outputs_str = str(tool.outputs)
+            inputs_str = json.dumps(tool.inputs)
+            outputs_str = json.dumps(tool.outputs)
             tool_desc += f'''Tool ID: {tool_id}
 Inputs:
 {inputs_str}
@@ -42,7 +50,7 @@ Note:
         resource_desc = ''
         for resource_id in self.resources:
             resource: Resource = self.resources[resource_id]
-            resource_desc += str({'id': resource_id, 'type': resource.type}) + '\n'
+            resource_desc += json.dumps({'id': resource_id, 'type': resource.type}) + '\n'
         if (resource_desc.strip() == ''):
             resource_desc = 'There is no resource in database'
         
@@ -72,7 +80,7 @@ Here is the user's request:
         self.log(prompt)
 
         self.log('call api')
-        ask_confirm()
+        self.ask_confirm()
         res = oaapi.ask_once('You are a helpful assistant', prompt)
 
         self.log('llm reply:')
@@ -96,8 +104,8 @@ Here is the user's request:
         tool_desc = ''
         for tool_id in self.tools:
             tool: Tool = self.tools[tool_id]
-            inputs_str = str(tool.inputs)
-            outputs_str = str(tool.outputs)
+            inputs_str = json.dumps(tool.inputs)
+            outputs_str = json.dumps(tool.outputs)
             tool_desc += f'''Tool ID: {tool_id}
 Inputs:
 {inputs_str}
@@ -110,7 +118,7 @@ Note:
         
         action_history_desc = ''
         for action, result in action_history:
-            action_history_desc += f'action: {action}\nresult: {result}\n'
+            action_history_desc += f'action: {json.dumps(action)}\nresult: {json.dumps(result)}\n'
 
         resource_desc = ''
         for resource_id in self.resources:
@@ -121,7 +129,7 @@ Note:
         
 
         prompt = f'''{self.CONTEXT}
-Now you will perform the third stage: summarizing. Firstly you will describe what tool you have used and how you used it in natural language. Next, you will summarize whether the plan to solve user's request is successful. Finally, you will respond to the user's request with a brief answer.
+Now you will perform the third stage: summarizing. Firstly you will describe what tool you have used and how you used it in natural language. Next, you will summarize whether the plan to solve user's request is successful. Finally, you will respond to the user's request with a clear answer.
 
 Please follow the rules:
 1. The final answer should be directly answering the user's request without irrelevant informations.
@@ -141,9 +149,10 @@ Here is the user's request:
         
         print(prompt)
         self.log('call api')
-        ask_confirm()
+        self.ask_confirm()
         res = oaapi.ask_once('You are a helpful assistant', prompt)
 
+        self.log('llm reply:')
         self.log(res)
 
 
@@ -151,11 +160,11 @@ Here is the user's request:
 
 if __name__ == '__main__':
     a = SimpleAgent(CN())
-    a.add_tool('semantic_segmentation', ImageMetaTool('seg', 'this tool takes an image, performs semantic segmentation, and returns masks with following labels: ["Asphalt"]'))
+    a.add_tool('semantic_segmentation', ImageMetaTool('seg', 'this tool takes an image, performs semantic segmentation, and returns masks with following labels: ["Asphalt"]', output_type='masks'))
     a.add_tool('object_detection', ImageMetaTool('det', 'this tool takes an image, performs object detection, and returns object bounding boxes in xywh format. The categories of objects that will be detected are ["Car", "Plane"]'))
     # a.add_tool('python', PythonTool())
     a.add_resource('input', ImageResource(None, meta={
         'seg': MasksResource({'Asphalt': 'xxx'}),
         'det': JsonResource({'Car': [[1,2,16,14], [20,6,13,23]]}),
     }))
-    a.chat('Is there any planes in the image?')
+    a.chat('Draw a image of fish for me')

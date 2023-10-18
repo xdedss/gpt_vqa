@@ -1,6 +1,6 @@
 
 from . import Resource
-
+import json
 
 class ImageResource(Resource):
 
@@ -21,7 +21,7 @@ class JsonResource(Resource):
         self.type = 'json'
     
     def detailed_desc(self) -> str:
-        return str(self.data)
+        return json.dumps(self.data)
 
 
 class MasksResource(Resource):
@@ -33,4 +33,4 @@ class MasksResource(Resource):
     
     def detailed_desc(self):
         print('formatting', self.data)
-        return f'A dict with these keys: {[k for k in self.data]}, each with a mask of corresponding lable.'
+        return f'A dict with these keys: {json.dumps([k for k in self.data])}, each with a mask of corresponding lable.'

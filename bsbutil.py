@@ -70,6 +70,49 @@ def gather_data(pan_json, pan_image_dir, image_id):
     }
     return res
 
+
+def gather_data_separate(pan_json, pan_image_dir, image_id):
+    ''' get data, but for segmentation and object detection tasks separetely '''
+    # build objects
+    objects = []
+    segmentations = dict()
+    ann = find_ann_of_image_id(pan_json, image_id)
+    if (ann is None):
+        print('bad annotation or image id', image_id)
+        return None
+    label_img = cv2.imread(os.path.join(pan_image_dir, ann['file_name']))
+    if (label_img is None):
+        print('bad label image', ann['file_name'])
+        return None
+    b, g, r = label_img.transpose(2, 0, 1)
+    ids = r + g * 256 + b * (256 ** 2)
+    for seg in ann['segments_info']:
+        cat_id = seg['category_id']
+        cat_name = class_names[cat_id]
+        id = seg['id']
+        bbox = seg['bbox']
+        if (cat_id >= 4):
+            # things
+            objects.append({
+                'label': cat_name,
+                'bbox': bbox,
+            })
+            # add to mask
+            if (not cat_name in segmentations):
+                segmentations[cat_name] = np.zeros(ids.shape, dtype=np.bool8)
+            segmentations[cat_name] |= (ids == id)
+        else:
+            # stuff
+            if (not cat_name in segmentations):
+                segmentations[cat_name] = np.zeros(ids.shape, dtype=np.bool8)
+            segmentations[cat_name] |= (ids == id)
+    
+    res = {
+        'det': objects,
+        'seg': segmentations,
+    }
+    return res
+
 if __name__ == '__main__':
 
     json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
