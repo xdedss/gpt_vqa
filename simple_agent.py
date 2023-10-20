@@ -15,7 +15,7 @@ import oaapi
 
 class SimpleAgent(AgentBase):
 
-    CONTEXT = '''You are an AI assistant that use tools to solve the user's request. The first stage is planning, where you are provided with informations about the user input, tools available and resources available, and you should make a plan to use tools available to solve the user's request. The second stage is running, where the plan is executed and results are stored in resources database. The third stage is summarizing, where you make conclution to the user's request based on previous stages.
+    CONTEXT = '''You are an AI assistant that use tools to solve the user's request. The first stage is planning, where you are provided with informations about the user input, tools available and resources available, and you should make a plan to use tools available to solve the user's request. The second stage is running, where the plan is executed and results are stored in resources database. The third stage is summarizing, where you make conclusion to the user's request based on previous stages.
 '''.strip()
     
     require_confirm = False
