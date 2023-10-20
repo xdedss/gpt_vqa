@@ -40,6 +40,9 @@ class AgentBase():
     def one_time_planning(self, input: str):
         raise NotImplementedError()
     
+    def feedback_planning(self, input: str):
+        raise NotImplementedError()
+    
     def summarize(self, input: str, action_history):
         raise NotImplementedError()
 
@@ -113,19 +116,31 @@ class AgentBase():
             # result should contain: success/fail, why fail
             result_description = self.run_action(action)
             action_history.append((action, result_description))
-        
-        # # feedback
-        # action_history = []
-        # while (True):
-        #     action = self.feedback_planning(input, action_history)
-        #     result_description = self.run_action(action)
-        #     action_history.append((action, result_description))
 
         # ================= summarize ==============
         summary = self.summarize(input, action_history)
 
         return summary
 
+    def chat_feedback(self, input: str) -> str:
+        
+        
+        # feedback
+        action_history = []
+        while (True):
+            actions = self.feedback_planning(input, action_history)
+            if (len(actions) == 0):
+                break
+            for action in actions:
+                # action: {'id': xxx, 'inputs': {'image': xxx}, 'outputs': {'mask': xxx, 'boxes': xxx}}
+                # result should contain: success/fail, why fail
+                result_description = self.run_action(action)
+                action_history.append((action, result_description))
+        
+        # ================= summarize ==============
+        summary = self.summarize(input, action_history)
+
+        return summary
             
     def loge(self, message):
         now = datetime.datetime.now()

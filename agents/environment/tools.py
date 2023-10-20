@@ -21,7 +21,7 @@ class ImageMetaTool(Tool):
         super().__init__()
         self.key = key
         self.description = description
-        outputs = [{
+        self.outputs = [{
             'name': 'output',
             'type': output_type,
         }]
@@ -39,6 +39,18 @@ class ImageMetaTool(Tool):
         }
 
 
+class DummyTool(Tool):
+    ''' for testing '''
+    
+    def __init__(self, description, inputs, outputs, output_func) -> None:
+        super().__init__()
+        self.description = description
+        self.outputs = outputs
+        self.inputs = inputs
+        self.output_func = output_func
+    
+    def use(self, inputs):
+        return self.output_func(inputs)
 
 
 
