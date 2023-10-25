@@ -31,7 +31,7 @@ class SimpleAgent(AgentBase):
                 print('user cancelled action')
                 sys.exit(0)
     
-    def one_time_planning(self, input: str):
+    def feedback_planning(self, input: str, action_history):
 
         tool_desc = ''
         for tool_id in self.tools:
@@ -47,30 +47,42 @@ Note:
 {tool.description}
 
 '''
+        action_history_desc = ''
+        for action, result in action_history:
+            action_history_desc += f'action: {json.dumps(action)}\nresult: {json.dumps(result)}\n'
+        if (action_history_desc.strip() == ''):
+            action_history_desc = 'Currently no tool call has been performed'
+        
         resource_desc = ''
         for resource_id in self.resources:
             resource: Resource = self.resources[resource_id]
-            resource_desc += json.dumps({'id': resource_id, 'type': resource.type}) + '\n'
+            resource_desc += f'resources["{resource_id}"] is as follows:\nid: {resource_id}, type: {resource.type}\nDetails: {resource.detailed_desc()}\n'
         if (resource_desc.strip() == ''):
             resource_desc = 'There is no resource in database'
         
-        json_example = '[{"id": "tool_id", "inputs": {"input name": "resource id", ...}, "outputs": {"output name": "resource id", ...}}, ...]'
+        json_example = '[{"id": "tool_id" ,"reason": "reason to perform this step", "inputs": {"input name": "resource id", ...}, "outputs": {"output name": "resource id", ...}}, ...]'
 
         prompt = f'''{self.CONTEXT}
-Now you will perform the first stage: planning. First you should analyze the user's request and break them into sequential steps. In each step you can use one tool, please clarify which tool you want to use, why use it, what is used as its input, and how do you save its output. Finally, you will summarize your plan following strict json format like {json_example}.
+Now you will perform the first stage: planning. The planning is done iteratively. In this iteration, you should first examine the results of tools you used in previous iterations if there are any. Then analyze the user's request and think about what remains to be done and break them into sequential steps. In each step you can use one tool, please clarify which tool you want to use, why use it, what is used as its input, and how do you save its output. Finally, you will summarize your plan for this iteration following strict json format like {json_example}.
 
 Please follow the rules:
 1. You can only use tools that are available, do not make up tools that do not exist.
 2. You have the ability to analyze text or json by yourself, so you do not have to use tool for simple analysis.
 3. The summarized json should only contain calls to tools.
-4. The output of each step will be saved into a database with the id you assign, and may be used as input of subsequent steps if you need.
-5. The plan needs to gather necessary information to answer the user's request.
+4. The summarized json should not contain steps that are already done.
+5. The output of each step will be saved into a database with the id you assign, and may be used as input of subsequent steps if you need.
+6. The plan needs to gather necessary information to answer the user's request.
+7. If you think all necessary steps are already done, you can summarize your plan with an empty list [].
+
 
 Here is a list of available tools:
 
 {tool_desc}
 
-Here is a list of resources currently in database:
+Here is sequential tool calls that you planned and performed:
+{action_history_desc}
+
+Here is the resources object that contains resources that are used as inputs or outputs of the tool calls:
 {resource_desc}
 
 Here is the user's request:
@@ -120,11 +132,13 @@ Note:
         action_history_desc = ''
         for action, result in action_history:
             action_history_desc += f'action: {json.dumps(action)}\nresult: {json.dumps(result)}\n'
+        if (action_history_desc.strip() == ''):
+            action_history_desc = 'No tool call has been performed'
 
         resource_desc = ''
         for resource_id in self.resources:
             resource: Resource = self.resources[resource_id]
-            resource_desc += f'resources["{resource_id}"] is as follows:\n{resource.detailed_desc()}\n'
+            resource_desc += f'resources["{resource_id}"] is as follows:\nid: {resource_id}, type: {resource.type}\nDetails: {resource.detailed_desc()}\n'
         if (resource_desc.strip() == ''):
             resource_desc = 'There is no resource in database'
         
@@ -161,6 +175,7 @@ Here is the user's request:
 
 if __name__ == '__main__':
     a = SimpleAgent(CN())
+    a.require_confirm = True
     a.add_tool('semantic_segmentation', ImageMetaTool('seg', 'this tool takes an image, performs semantic segmentation, and returns masks with following labels: ["Asphalt"]', output_type='masks'))
     a.add_tool('object_detection', ImageMetaTool('det', 'this tool takes an image, performs object detection, and returns object bounding boxes in xywh format. The categories of objects that will be detected are ["Car", "Plane"]'))
     # a.add_tool('python', PythonTool())
@@ -168,4 +183,4 @@ if __name__ == '__main__':
         'seg': MasksResource({'Asphalt': 'xxx'}),
         'det': JsonResource({'Car': [[1,2,16,14], [20,6,13,23]]}),
     }))
-    a.chat('Draw a image of fish for me')
+    a.chat_feedback('If there are cars in the image, perform segmentation on the image. If not, do not perform segmentation')

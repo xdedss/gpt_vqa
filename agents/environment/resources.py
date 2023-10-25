@@ -21,7 +21,7 @@ class JsonResource(Resource):
         self.type = 'json'
     
     def detailed_desc(self) -> str:
-        return json.dumps(self.data)
+        return 'A json object: ' + json.dumps(self.data)
 
 
 class MasksResource(Resource):
@@ -32,5 +32,5 @@ class MasksResource(Resource):
         self.type = 'masks'
     
     def detailed_desc(self):
-        print('formatting', self.data)
+        # print('formatting', self.data)
         return f'A dict with these keys: {json.dumps([k for k in self.data])}, each with a mask of corresponding lable.'
