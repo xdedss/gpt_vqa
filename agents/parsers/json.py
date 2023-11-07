@@ -52,7 +52,7 @@ class JsonParser(LLMParser):
     def __init__(self):
         super().__init__()
     
-    def parse(self, text: str) -> str:
+    def parse(self, text: str) -> dict:
         # if has braces
         t = extract_text_between_braces(text)
         if (t is None):

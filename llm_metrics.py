@@ -1,9 +1,14 @@
 
 import oaapi
-from agents.parsers.json import JsonParser
+from agents.parsers.json import LastJsonParser
+import datetime
+
+def log(message):
+    now = datetime.datetime.now()
+    print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
 
 # gt should be categorical, check if equal
-def compare_question_answer_groundtruth(user_question, response, gt):
+def compare_question_answer_groundtruth(user_question, response, gt, need_confirm=False):
     
     json_str = '{"result": true/false}'
     prompt = f'''
@@ -25,16 +30,24 @@ The gound truth of the question is: {gt}
 
 You are going to assess the following aspect of the answer: Does the response align with the fact?
 
+Here are guidelines:
+1. If the question is about counting and the answer denies the existence of the required object, we consider it equivalent to answering with number 0.
+2. For questions about counting, the quantity in the answer must be exactly equal to the ground truth.
 
 You should first explain your thought and your assessment. Finally you should summarize your assessment with strict json format: {json_str}
 '''.strip()
     
-    res = oaapi.ask_once('You are a helpful assistant.')
-    json_obj = JsonParser().parse(res)
+    log('LLM metrics input')
+    log(prompt)
+    res = oaapi.ask_once('You are a helpful assistant.', prompt)
+    log('LLM metrics output')
+    log(res)
+
+    json_obj = LastJsonParser().parse(res)
     return json_obj['result']
 
 # gt should be a number
-def compare_question_answer_groundtruth_numerical(user_question, response, gt):
+def compare_question_answer_groundtruth_numerical(user_question, response, gt, need_confirm=False):
     json_str = '{"result": true/false, "numerical_value_in_response": ...}'
     prompt = f'''
 You are an AI assistant that assess the quality of response produced by an autonomous system in respond to given user request. The system should answer any question that the user asks at the end of the response. 
@@ -60,9 +73,18 @@ Here are guidelines:
 
 You should first explain your thought and your assessment. Finally you should summarize your assessment with strict json format: {json_str}
 '''.strip()
+    
+    log('LLM metrics input')
+    log(prompt)
+    res = oaapi.ask_once('You are a helpful assistant.', prompt)
+    log('LLM metrics output')
+    log(res)
+
+    json_obj = LastJsonParser().parse(res)
+    return json_obj
 
 # no gt is provided, check logical connection between q and a
-def compare_question_answer(user_question, response):
+def compare_question_answer(user_question, response, need_confirm=False):
     json_str = '{"result": true/false}'
     prompt = f'''
 You are an AI assistant that assess the quality of responseproduced by an autonomous system in respond to given user question. The system should answer any question that the user asks at the end of the response. 
@@ -101,8 +123,13 @@ Response: There are no people in the image.
 You should first explain your thought and your assessment. Finally you should summarize your assessment with strict json format: {json_str}
 '''.strip()
     
-    res = oaapi.ask_once('You are a helpful assistant.')
-    json_obj = JsonParser().parse(res)
+    log('LLM metrics input')
+    log(prompt)
+    res = oaapi.ask_once('You are a helpful assistant.', prompt)
+    log('LLM metrics output')
+    log(res)
+
+    json_obj = LastJsonParser().parse(res)
     return json_obj['result']
 
 

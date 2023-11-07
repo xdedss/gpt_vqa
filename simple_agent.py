@@ -140,6 +140,7 @@ Now you will perform the third stage: summarizing. Firstly you will describe wha
 
 Please follow the rules:
 1. The final answer should be directly answering the user's request without irrelevant informations.
+2. If the user is asking "how many", provide an exact number.
 
 Here is a list of tools and their descriptions:
 {tool_desc}
@@ -162,6 +163,7 @@ Here is the user's request:
         self.log('llm reply:')
         self.log(res)
 
+        return res
 
 
 
