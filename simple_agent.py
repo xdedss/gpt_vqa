@@ -94,8 +94,14 @@ Here is the user's request:
             "items": agents.ACTION_SCHEMA,
         })
 
+        self.log('parsed JSON:')
+        self.log(res_json)
+
         # simply remove the tools that does not exist
         res_json = [action for action in res_json if action['id'] in self.tools]
+        
+        self.log('filtered JSON:')
+        self.log(res_json)
 
         return res_json
 

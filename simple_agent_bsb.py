@@ -1,7 +1,8 @@
 
 from yacs.config import CfgNode as CN
 import simple_agent
-from simple_agent import SimpleAgent    
+from simple_agent import SimpleAgent
+from simple_agent_feedback import SimpleAgent as SimpleAgentFeedback
 from agents import AgentBase
 from agents.environment import Tool, ToolError, Resource
 from agents.environment.tools import ImageMetaTool, PythonTool
@@ -14,6 +15,7 @@ import bsbutil
 
 if __name__ == '__main__':
     image_id = 1
+    feedback = True
 
     json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
     with open(os.path.join(json_dir, 'panoptic_val.json'), 'r') as f:
@@ -23,7 +25,11 @@ if __name__ == '__main__':
     unique_obj_labels = list(set([o['label'] for o in dataset_gt['det']]))
     unique_seg_labels = list(dataset_gt['seg'].keys())
 
-    a = SimpleAgent(CN())
+    if (feedback):
+        a = SimpleAgentFeedback(CN())
+    else:
+        a = SimpleAgent(CN())
+    a.require_confirm = True
     a.add_tool('semantic_segmentation', ImageMetaTool('seg', f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(unique_seg_labels)}', output_type='masks'))
     a.add_tool('object_detection', ImageMetaTool('det', f'this tool takes an image, performs object detection, and returns object bounding boxes in xywh format. The categories of objects that will be detected are {json.dumps(unique_obj_labels)}'))
     # a.add_tool('python', PythonTool())
@@ -32,6 +38,10 @@ if __name__ == '__main__':
         'det': JsonResource(dataset_gt['det']),
     }))
     a.require_confirm = True
-    a.chat('How many houses are there in the image?')
+    request = 'How many houses are there in the image?'
+    if (feedback):
+        a.chat_feedback(request)
+    else:
+        a.chat(request)
 
 
