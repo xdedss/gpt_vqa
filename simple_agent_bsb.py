@@ -10,10 +10,14 @@ from agents.environment.resources import ImageResource, JsonResource, MasksResou
 from agents.parsers.json import LastJsonParser
 import llm_metrics
 
-import os, json, random
+import os, json, random, uuid
+import logging
 
 import bsbutil
 import database_sqlite
+import llm_utils
+
+logger = logging.getLogger()
 
 def get_answer(question, image_id, feedback=False, need_confirm=False):
     json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
@@ -52,7 +56,7 @@ def count_det_label(data, label):
 
 def evaluate(image_id, question, answer_gt, feedback=False, need_confirm=False):
 
-    print(f'QUESTION:\n{question}\nANSWER GT:\n{answer_gt}')
+    logger.info(f'QUESTION:\n{question}\nANSWER GT:\n{answer_gt}')
     if (need_confirm):
         input('continue?')
 
@@ -65,14 +69,16 @@ def evaluate(image_id, question, answer_gt, feedback=False, need_confirm=False):
     return answer, correctness
 
 
-def evaluate_all(split='val', feedback=False, need_confirm=False):
-    db = database_sqlite.Database('simple_agent_bsb.db')
+def evaluate_all(*, start_index=0, end_index=None, db_path='default.db', split='val', feedback=False, need_confirm=False):
+    db = database_sqlite.Database(db_path)
     json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
     label_dir = os.path.join(json_dir, '..', f'panoptic_{split}')
-    with open(os.path.join(json_dir, 'panoptic_val.json'), 'r') as f:
+    with open(os.path.join(json_dir, f'panoptic_{split}.json'), 'r') as f:
         pan_json = json.load(f)
 
-    for image in pan_json['images'][0:50]:
+    if (end_index is None):
+        end_index = len(pan_json['images'])
+    for image in pan_json['images'][start_index:end_index]:
         image_id = image['id']
     
         dataset_gt = bsbutil.gather_data_separate(pan_json, label_dir, image_id)
@@ -81,8 +87,13 @@ def evaluate_all(split='val', feedback=False, need_confirm=False):
         unique_seg_labels = list(dataset_gt['seg'].keys())
 
         for label in unique_obj_labels:
-            print(image_id, label)
             
+            meta_data = dict()
+            uid = str(uuid.uuid4())
+            meta_data['uuid'] = uid # for comparison with 
+            logger.info(f'uuid: {uid}')
+
+            logger.info((image_id, label))
 
             question = f'How many {label} are there in the image?'
             answer_gt = count_det_label(dataset_gt['det'], label)
@@ -90,11 +101,12 @@ def evaluate_all(split='val', feedback=False, need_confirm=False):
             try:
                 answer, correctness = evaluate(image_id, question, answer_gt, feedback, need_confirm)
                 if (correctness):
-                    db.add_data(image_id, question, answer, answer_gt, 'correct', '')
+                    db.add_data(image_id, question, answer, answer_gt, 'correct', json.dumps(meta_data, ensure_ascii=False))
                 else:
-                    db.add_data(image_id, question, answer, answer_gt, 'incorrect', '')
+                    db.add_data(image_id, question, answer, answer_gt, 'incorrect', json.dumps(meta_data, ensure_ascii=False))
             except Exception as e:
-                db.add_data(image_id, question, '', answer_gt, 'error', str(e))
+                meta_data['error'] = str(e)
+                db.add_data(image_id, question, '', answer_gt, 'error', json.dumps(meta_data, ensure_ascii=False))
             
     db.close()
 
@@ -102,6 +114,10 @@ def evaluate_all(split='val', feedback=False, need_confirm=False):
 if __name__ == '__main__':
     image_id = 50
     feedback = False
+
+    llm_utils.setup_root_logger(
+        filename='simple_agent_bsb.log', 
+        level=logging.INFO)
 
     # res = get_answer('How many houses are there in the image?', image_id, feedback)
     # print('=================================')
@@ -111,7 +127,11 @@ if __name__ == '__main__':
     # print('=================================')
     # print(correctness)
 
-    evaluate_all()
+    evaluate_all(
+        start_index=50,
+        end_index=51,
+        feedback=feedback, 
+        db_path='simple_agent_bsb.db')
 
 
 

@@ -3,6 +3,10 @@
 from yacs.config import CfgNode as CN
 import jsonschema
 import datetime
+import jsonschema.exceptions
+
+import logging
+logger = logging.getLogger('agent')
 
 from . import environment
 
@@ -108,7 +112,7 @@ class AgentBase():
         # ================= planning =================
         # 1 time planning vs feedback
         # 1 time
-        actions = self.one_time_planning(input)
+        actions = self.one_time_planning(input) # possible jsonschema.exceptions.ValidationError
 
         action_history = []
         for action in actions:
@@ -126,9 +130,18 @@ class AgentBase():
         
         
         # feedback
+        json_format_retries = 3
+        feedback_limit = 3
+
         action_history = []
-        while (True):
-            actions = self.feedback_planning(input, action_history)
+        for i_feedback in range(feedback_limit):
+            for i_retry in range(json_format_retries):
+                try:
+                    actions = self.feedback_planning(input, action_history) # possible jsonschema.exceptions.ValidationError
+                except jsonschema.exceptions.ValidationError:
+                    if (i_retry == json_format_retries - 1):
+                        self.logw('json validation retry exceeded limit')
+                        raise
             if (len(actions) == 0):
                 break
             for action in actions:
@@ -136,6 +149,8 @@ class AgentBase():
                 # result should contain: success/fail, why fail
                 result_description = self.run_action(action)
                 action_history.append((action, result_description))
+        else:
+            self.logw('feedback exceeded limit')
         
         # ================= summarize ==============
         summary = self.summarize(input, action_history)
@@ -143,12 +158,15 @@ class AgentBase():
         return summary
             
     def loge(self, message):
-        now = datetime.datetime.now()
-        print(f'[{now.strftime("%Y%m%d-%H%M%S")}][ERROR] {message}')
+        logger.error(message)
+        # now = datetime.datetime.now()
+        # print(f'[{now.strftime("%Y%m%d-%H%M%S")}][ERROR] {message}')
     def logw(self, message):
-        now = datetime.datetime.now()
-        print(f'[{now.strftime("%Y%m%d-%H%M%S")}][WARN] {message}')
+        logger.warning(message)
+        # now = datetime.datetime.now()
+        # print(f'[{now.strftime("%Y%m%d-%H%M%S")}][WARN] {message}')
     def log(self, message):
-        now = datetime.datetime.now()
-        print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
+        logger.info(message)
+        # now = datetime.datetime.now()
+        # print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
 

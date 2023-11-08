@@ -2,10 +2,14 @@
 import oaapi
 from agents.parsers.json import LastJsonParser
 import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 def log(message):
-    now = datetime.datetime.now()
-    print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
+    logger.info(message)
+    # now = datetime.datetime.now()
+    # print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
 
 # gt should be categorical, check if equal
 def compare_question_answer_groundtruth(user_question, response, gt, need_confirm=False):

@@ -6,6 +6,31 @@ from agents.parsers import LLMParser, ParseFailed
 import templates.translation
 import oaapi
 
+import logging
+
+def setup_root_logger(*, console=True, level=logging.DEBUG, filename=None):
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+    for handler in root_logger.handlers:
+        root_logger.removeHandler(handler)
+    
+    formatter = logging.Formatter('[%(asctime)s][%(name)s - %(levelname)s] %(message)s')
+    
+    if (filename is not None):
+        file_handler = logging.FileHandler(filename)
+        file_handler.setLevel(level)  # Set the log level for the file handler
+        file_handler.setFormatter(formatter)
+        root_logger.addHandler(file_handler)
+
+    if (console):
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(level)
+        console_handler.setFormatter(formatter)
+        root_logger.addHandler(console_handler)
+    
+    return root_logger
+
 class MaxRetriesExceeded(Exception):
     def __init__(self, exception_list):
         super().__init__("MaxRetriesExceeded occurred with the following exceptions:")

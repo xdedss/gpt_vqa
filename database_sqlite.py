@@ -28,13 +28,22 @@ class Database:
         data = (image_id, question, answer, answer_gt, flag, info)
         self.conn.execute(sql, data)
         self.conn.commit()
+    
+    def count_data_with_flag(self, flag):
+        sql = """
+        SELECT COUNT(*) FROM data WHERE flag = ?
+        """
+        cursor = self.conn.execute(sql, (flag,))
+        count = cursor.fetchone()[0]
+        return count
 
     def close(self):
         self.conn.close()
 
 # Usage example:
 if __name__ == "__main__":
-    db = Database("my_database.db")
-    db.add_data(1, "What is this?", "It's a cat.", "It's a cat.", "correct", "Additional info")
-    db.add_data(2, "What color is it?", "It's black.", "It's black.", "correct", "More info")
-    db.close()
+    # db = Database("my_database.db")
+    # db.add_data(1, "What is this?", "It's a cat.", "It's a cat.", "correct", "Additional info")
+    # db.add_data(2, "What color is it?", "It's black.", "It's black.", "correct", "More info")
+    # db.close()
+    pass
