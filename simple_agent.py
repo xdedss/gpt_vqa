@@ -28,7 +28,7 @@ class SimpleAgent(AgentBase):
             res = input('confirm?')
             if (res.lower() in ['n', 'no']):
                 import sys
-                print('user cancelled action')
+                self.logw('user cancelled action')
                 sys.exit(0)
     
     def one_time_planning(self, input: str):
@@ -155,7 +155,7 @@ Here is the user's request:
 {input}
 '''.strip()
         
-        print(prompt)
+        self.log(prompt)
         self.log('call api')
         self.ask_confirm()
         res = oaapi.ask_once('You are a helpful assistant', prompt)

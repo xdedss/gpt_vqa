@@ -6,6 +6,13 @@ import time
 import cv2
 import numpy as np
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+def log(message):
+    logger.info(message)
+
 def find_ann_of_image_id(ann_json, image_id):
     annotations = ann_json['annotations']
     for annotation in annotations:
@@ -37,11 +44,11 @@ def gather_data(pan_json, pan_image_dir, image_id):
     segmentations = dict()
     ann = find_ann_of_image_id(pan_json, image_id)
     if (ann is None):
-        print('bad annotation or image id', image_id)
+        log(f'bad annotation or image id, {image_id}')
         return None
     label_img = cv2.imread(os.path.join(pan_image_dir, ann['file_name']))
     if (label_img is None):
-        print('bad label image', ann['file_name'])
+        log(f'bad label image {ann["file_name"]}')
         return None
     b, g, r = label_img.transpose(2, 0, 1)
     ids = r + g * 256 + b * (256 ** 2)
@@ -78,11 +85,11 @@ def gather_data_separate(pan_json, pan_image_dir, image_id):
     segmentations = dict()
     ann = find_ann_of_image_id(pan_json, image_id)
     if (ann is None):
-        print('bad annotation or image id', image_id)
+        log(f'bad annotation or image id, {image_id}')
         return None
     label_img = cv2.imread(os.path.join(pan_image_dir, ann['file_name']))
     if (label_img is None):
-        print('bad label image', ann['file_name'])
+        log(f'bad label image {ann["file_name"]}')
         return None
     b, g, r = label_img.transpose(2, 0, 1)
     ids = r + g * 256 + b * (256 ** 2)
