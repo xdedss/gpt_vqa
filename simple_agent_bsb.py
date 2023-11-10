@@ -105,7 +105,10 @@ def evaluate_all(*, start_index=0, end_index=None, db_path='default.db', split='
                 else:
                     db.add_data(image_id, question, answer, answer_gt, 'incorrect', json.dumps(meta_data, ensure_ascii=False))
             except Exception as e:
+                import traceback
+                traceback.print_exc()
                 meta_data['error'] = str(e)
+                logger.error(e)
                 db.add_data(image_id, question, '', answer_gt, 'error', json.dumps(meta_data, ensure_ascii=False))
             
     db.close()
