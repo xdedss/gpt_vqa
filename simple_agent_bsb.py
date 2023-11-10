@@ -13,11 +13,28 @@ import llm_metrics
 import os, json, random, uuid
 import logging
 
+import requests
+import urllib.parse
+
 import bsbutil
 import database_sqlite
 import llm_utils
 
 logger = logging.getLogger()
+
+def get_answer_call_api(api_url, image_path, text) -> str:
+    # Create a dictionary with the files to be sent
+    files = {'image': open(image_path, 'rb')}
+    
+    # Provide the text as a separate parameter
+    data = {'question': text}
+    
+    # Make the POST request to the API endpoint
+    response = requests.post(api_url+f'?question={urllib.parse.quote(text)}', files=files, json=data)
+    
+    # Return the response content as a string
+    return response.text
+
 
 def get_answer(question, image_id, feedback=False, need_confirm=False):
     json_dir = 'E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\annotations'
@@ -61,10 +78,20 @@ def evaluate(image_id, question, answer_gt, feedback=False, need_confirm=False):
         input('continue?')
 
     # call the agent
-    answer = get_answer(question, image_id, feedback, need_confirm)
+    # answer = get_answer(question, image_id, feedback, need_confirm)
+    answer = get_answer_call_api(
+        'http://127.0.0.1:8000/inference', 
+        os.path.join('E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\image_val_png', f'{image_id}.png'),
+        question)
+    logger.info("visualglm answer")
+    logger.info(answer)
+    # import sys
+    # sys.exit(0)
 
     # now use gpt metric
-    correctness = llm_metrics.compare_question_answer_groundtruth(question, answer, answer_gt)
+    correctness = llm_utils.retry_until_succeed(
+        lambda: llm_metrics.compare_question_answer_groundtruth(question, answer, answer_gt)
+    )
 
     return answer, correctness
 
