@@ -34,7 +34,7 @@ class_names = {
     9: "Soccer Field",
     10: "Commercial Building",
     11: "Residential Building",
-    12: "Commertial Building Block",
+    12: "Commercial Building Block",
     13: "House",
     14: "Small House" # Small Construction
 }
