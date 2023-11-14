@@ -181,3 +181,5 @@ objdet_annotated*
 temp.pkl
 temp.py
 log.txt
+
+*.db

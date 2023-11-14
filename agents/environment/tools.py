@@ -3,6 +3,28 @@
 from . import Tool, ToolError
 from .resources import ImageResource, JsonResource
 
+import jsonschema
+
+DETECTION_ITEM_SCHEMA = {
+    "type": "object",
+    "properties": {
+      "label": {
+        "type": "string",
+        "description": "Label of the object"
+      },
+      "bbox": {
+        "type": "array",
+        "items": {
+          "type": "integer"
+        },
+        "minItems": 4,
+        "maxItems": 4,
+        "description": "Bounding box coordinates [x, y, width, height]"
+      }
+    },
+    "required": ["label", "bbox"]
+}
+
 class ImageMetaTool(Tool):
     ''' this will retrieve certain info from image meta, without wrapping, which means you have to wrap it in image meta '''
     
@@ -54,6 +76,54 @@ class DummyTool(Tool):
 
 
 
+class DetectionCounting(Tool):
+    ''' counts detection result '''
+    
+    description = 'This tool will count the number of objects of given label in given detection result. The first input "detection_info" should be the resource id of the detection result, the second input "label_to_count" should be the plain text of the label to count. The output should be the resource id to store the counting result.'
+
+    inputs = [{
+        'name': 'detection_info',
+        'type': 'json',
+    },{
+        'name': 'label_to_count',
+        'type': 'text',
+    }]
+    outputs = [{
+        'name': 'count',
+        'type': 'json',
+    }]
+
+    def __init__(self) -> None:
+        super().__init__()
+    
+    
+    def count_det_label(self, data, label):
+        count = 0
+        for item in data:
+            if item["label"] == label:
+                count += 1
+        return count
+
+    def use(self, inputs):
+        det_info = inputs['detection_info']
+        label = inputs['label_to_count']
+
+        det_info: JsonResource
+
+        jsonschema.validate(det_info.data, {
+            'type': 'array',
+            'items': DETECTION_ITEM_SCHEMA
+        })
+        
+        
+        return {
+            'count': JsonResource({
+                'count': self.count_det_label(det_info.data, label)
+            })
+        }
+
+
+
 def execute_user_function(user_function_str, resources):
     # Define the expected function name and argument
     expected_function_name = "run"
@@ -98,9 +168,7 @@ class PythonTool(Tool):
         super().__init__()
 
     
-    description = '''This tool runs python code in a python environment. the code should be provided as a function:
-def run(resources):
-    ...
+    description = '''This tool will automatically write python code according to the specifications you provide to it. 
 where the resources is the dict representing the database whose keys are resource id. You can read from it or modify it in the code. For this tool, you should directly provide the code itself instead of resource id.'''
 
     inputs = {

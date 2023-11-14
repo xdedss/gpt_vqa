@@ -5,7 +5,7 @@ from simple_agent import SimpleAgent
 from simple_agent_feedback import SimpleAgent as SimpleAgentFeedback
 from agents import AgentBase
 from agents.environment import Tool, ToolError, Resource
-from agents.environment.tools import ImageMetaTool, PythonTool
+from agents.environment.tools import ImageMetaTool, PythonTool, DetectionCounting
 from agents.environment.resources import ImageResource, JsonResource, MasksResource
 from agents.parsers.json import LastJsonParser
 import llm_metrics
@@ -49,8 +49,15 @@ def get_answer(question, image_id, feedback=False, need_confirm=False):
         a = SimpleAgentFeedback(CN())
     else:
         a = SimpleAgent(CN())
-    a.add_tool('semantic_segmentation', ImageMetaTool('seg', f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(unique_seg_labels)}', output_type='masks'))
-    a.add_tool('object_detection', ImageMetaTool('det', f'this tool takes an image, performs object detection, and returns object bounding boxes in xywh format. The categories of objects that will be detected are {json.dumps(unique_obj_labels)}'))
+    a.add_tool(
+        'semantic_segmentation', 
+        ImageMetaTool('seg', f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(unique_seg_labels)}', output_type='masks'))
+    a.add_tool(
+        'object_detection', 
+        ImageMetaTool('det', f'this tool takes an image, performs object detection, and returns object bounding boxes in xywh format. The categories of objects that will be detected are {json.dumps(unique_obj_labels)}'))
+    a.add_tool(
+        'count_objects',
+        DetectionCounting())
     # a.add_tool('python', PythonTool())
     a.add_resource('input', ImageResource(None, meta={
         'seg': MasksResource(dataset_gt['seg']),
@@ -78,15 +85,14 @@ def evaluate(image_id, question, answer_gt, feedback=False, need_confirm=False):
         input('continue?')
 
     # call the agent
-    # answer = get_answer(question, image_id, feedback, need_confirm)
-    answer = get_answer_call_api(
-        'http://127.0.0.1:8000/inference', 
-        os.path.join('E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\image_val_png', f'{image_id}.png'),
-        question)
-    logger.info("visualglm answer")
-    logger.info(answer)
-    # import sys
-    # sys.exit(0)
+    answer = get_answer(question, image_id, feedback, need_confirm)
+
+    # answer = get_answer_call_api(
+    #     'http://127.0.0.1:8000/inference', 
+    #     os.path.join('E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\image_val_png', f'{image_id}.png'),
+    #     question)
+    # logger.info("visualglm answer")
+    # logger.info(answer)
 
     # now use gpt metric
     correctness = llm_utils.retry_until_succeed(
@@ -131,6 +137,8 @@ def evaluate_all(*, start_index=0, end_index=None, db_path='default.db', split='
                     db.add_data(image_id, question, answer, answer_gt, 'correct', json.dumps(meta_data, ensure_ascii=False))
                 else:
                     db.add_data(image_id, question, answer, answer_gt, 'incorrect', json.dumps(meta_data, ensure_ascii=False))
+            except NameError:
+                raise
             except Exception as e:
                 import traceback
                 traceback.print_exc()
@@ -144,9 +152,8 @@ def evaluate_all(*, start_index=0, end_index=None, db_path='default.db', split='
 if __name__ == '__main__':
     image_id = 50
     feedback = False
-
     llm_utils.setup_root_logger(
-        filename='simple_agent_bsb.log', 
+        filename='simple_agent_bsb_count.log', 
         level=logging.INFO)
 
     # res = get_answer('How many houses are there in the image?', image_id, feedback)
@@ -158,10 +165,10 @@ if __name__ == '__main__':
     # print(correctness)
 
     evaluate_all(
-        start_index=50,
-        end_index=51,
+        start_index=0,
+        end_index=1,
         feedback=feedback, 
-        db_path='simple_agent_bsb.db')
+        db_path='simple_agent_bsb_count.db')
 
 
 
