@@ -1,9 +1,11 @@
 
 
 from . import Tool, ToolError
-from .resources import ImageResource, JsonResource
+from .resources import ImageResource, JsonResource, MasksResource
 
 import jsonschema
+
+import numpy as np
 
 DETECTION_ITEM_SCHEMA = {
     "type": "object",
@@ -119,6 +121,45 @@ class DetectionCounting(Tool):
         return {
             'count': JsonResource({
                 'count': self.count_det_label(det_info.data, label)
+            })
+        }
+
+
+class MaskArea(Tool):
+    ''' counts area '''
+    
+    description = 'This tool will count the area of a mask. The first input "mask_to_count" should be the resource id of the mask to count. The output should be the resource id to store the result, the second input "label_to_count" should be the plain text of the label to count. The result contains information about the absolute area in square pixels and the proportion of the mask as a float from 0-1.'
+
+    inputs = [{
+        'name': 'mask_to_count',
+        'type': 'mask',
+    },{
+        'name': 'label_to_count',
+        'type': 'text',
+    }]
+    outputs = [{
+        'name': 'area',
+        'type': 'json',
+    }]
+
+    def __init__(self) -> None:
+        super().__init__()
+    
+
+    def use(self, inputs):
+        mask = inputs['mask_to_count']
+        label = inputs['label_to_count']
+
+        assert isinstance(mask, MasksResource)
+        mask = mask.data[label].astype(bool)
+        raw_count = mask.sum()
+        proportion = mask.mean()
+        
+        
+        return {
+            'area': JsonResource({
+                'absolut_area': int(raw_count),
+                'proportion': float(proportion),
             })
         }
 
