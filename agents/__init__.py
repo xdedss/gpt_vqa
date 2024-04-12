@@ -44,7 +44,7 @@ class AgentBase():
     def one_time_planning(self, input: str):
         raise NotImplementedError()
     
-    def feedback_planning(self, input: str):
+    def feedback_planning(self, input: str, action_history):
         raise NotImplementedError()
     
     def summarize(self, input: str, action_history):

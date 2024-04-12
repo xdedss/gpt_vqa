@@ -87,7 +87,7 @@ visual-quesrion-answering
 '''
     chat_logs = 'None'
 
-    res = planning(task_list, demo, chat_logs)
+    res = planning(task_list, demo, chat_logs, "user input")
     print(res)
 
     

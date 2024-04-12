@@ -24,6 +24,7 @@ class Tool():
     outputs = []
 
     def __init__(self) -> None:
+        # do nothing by default
         pass
 
     def use(self, inputs):
