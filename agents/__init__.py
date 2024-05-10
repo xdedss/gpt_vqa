@@ -138,15 +138,17 @@ class AgentBase():
             for i_retry in range(json_format_retries):
                 try:
                     actions = self.feedback_planning(input, action_history) # possible jsonschema.exceptions.ValidationError
+                    break
                 except jsonschema.exceptions.ValidationError:
                     if (i_retry == json_format_retries - 1):
                         self.logw('json validation retry exceeded limit')
-                        raise
+                        raise  
             if (len(actions) == 0):
                 break
             for action in actions:
                 # action: {'id': xxx, 'inputs': {'image': xxx}, 'outputs': {'mask': xxx, 'boxes': xxx}}
                 # result should contain: success/fail, why fail
+                self.log(f'performing action {action}')
                 result_description = self.run_action(action)
                 action_history.append((action, result_description))
         else:
