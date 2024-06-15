@@ -3,18 +3,19 @@ import openai
 import os
 
 openai.api_key = os.environ.get('OPENAI_API_KEY')
-openai.api_base = os.environ.get('OPENAI_API_BASE')
+openai.base_url = os.environ.get('OPENAI_API_BASE')
 
 def ask_once(system, user_question: str) -> str:
 
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user_question},
-            ]
+            {"role": "system", "content": system},
+            {"role": "user", "content": user_question},
+        ],
+        temperature=0.7,
     )
-    text = response['choices'][0]['message']['content']
+    text = response.choices[0].message.content
     return (text)
 
 def generate_desc():
