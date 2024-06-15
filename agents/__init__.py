@@ -75,9 +75,10 @@ class AgentBase():
             input_type = input_schema['type']
             if (input_key not in inputs_designation):
                 return {"success": False, "reason": f"input '{input_key}' of tool is not specified"}
-            if (input_type == 'text'):
-                input_text = inputs_designation[input_key]
-                actual_input_dict[input_key] = input_text
+            if (input_type == 'text' or input_type == 'list'):
+                # these are literals instead of ids
+                input_var = inputs_designation[input_key]
+                actual_input_dict[input_key] = input_var
             else:
                 input_resource_id = inputs_designation[input_key]
                 if (input_resource_id not in self.resources):

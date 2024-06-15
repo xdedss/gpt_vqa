@@ -8,6 +8,9 @@ import jsonschema
 from pathfinding.core.diagonal_movement import DiagonalMovement
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
+
+from difflib import SequenceMatcher
+
 import numpy as np
 import cv2
 
@@ -33,6 +36,33 @@ DETECTION_ITEM_SCHEMA = {
     },
     "required": ["label", "bbox"]
 }
+
+
+def edit_distance(a, b):
+    required_edits = [
+        code
+        for code in (
+            SequenceMatcher(a=a, b=b, autojunk=False)
+            .get_opcodes()
+        )
+        if code[0] != 'equal'
+    ]
+    edit_count = 0
+    for edit_type, start1, end1, start2, end2 in required_edits:
+        edit_count += max(end1 - start1, end2 - start2)
+    return edit_count
+
+def find_nearest_string(a, strings):
+    ''' returns min_distance, min_s '''
+    min_distance = np.inf
+    min_s = None
+    for s in strings:
+        d = edit_distance(a, s)
+        if (d < min_distance):
+            min_s = s
+            min_distance = d
+    return min_distance, min_s
+
 
 class ImageMetaTool(Tool):
     ''' this will retrieve certain info from image meta, without wrapping, which means you have to wrap it in image meta '''
@@ -219,10 +249,10 @@ class MaskPathFinding(Tool):
     description = 'This tool will identify if there exists a path between 2 given points in a given a mask. The first input "mask_to_find_path" should be the resource id of the mask to find path in. The output should be the resource id to store the path finding result, the second input "label_to_find_path" should be the plain text of the label to find path in. "start_xy" and "end_xy" are the [x, y] coordinate of start and end points. '
 
     inputs = [{
-        'name': 'mask_to_count',
+        'name': 'mask_to_find_path',
         'type': 'mask',
     },{
-        'name': 'label_to_count',
+        'name': 'label_to_find_path',
         'type': 'text',
     },{
         'name': 'start_xy',
@@ -241,8 +271,8 @@ class MaskPathFinding(Tool):
     
 
     def use(self, inputs):
-        mask = inputs['mask_to_count']
-        label = inputs['label_to_count']
+        mask = inputs['mask_to_find_path']
+        label = inputs['label_to_find_path']
         start_xy = inputs['start_xy']
         end_xy = inputs['end_xy']
         start_xy = (int(start_xy[0]), int(start_xy[1]))

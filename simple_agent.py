@@ -3,7 +3,7 @@ from yacs.config import CfgNode as CN
 import agents
 from agents import AgentBase
 from agents.environment import Tool, ToolError, Resource
-from agents.environment.tools import ImageMetaTool, PythonTool
+from agents.environment.tools import ImageMetaTool, PythonTool, find_nearest_string
 from agents.environment.resources import ImageResource, JsonResource, MasksResource
 from agents.parsers.json import LastJsonParser
 
@@ -97,6 +97,13 @@ Here is the user's request:
         self.log('parsed JSON:')
         self.log(res_json)
 
+        
+        # replace id with the most similar ones
+        for action in res_json:
+            if action['id'] not in self.tools:
+                nearest_d, nearest_id = find_nearest_string(action['id'], self.tools.keys())
+                if (nearest_d < 8):
+                    action['id'] = nearest_id
         # simply remove the tools that does not exist
         res_json = [action for action in res_json if action['id'] in self.tools]
         
