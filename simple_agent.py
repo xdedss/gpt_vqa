@@ -113,7 +113,7 @@ Here is the user's request:
         return res_json
 
     
-    def summarize(self, input: str, action_history):
+    def summarize(self, input: str):
         
         tool_desc = ''
         for tool_id in self.tools:
@@ -131,8 +131,8 @@ Note:
 '''
         
         action_history_desc = ''
-        for action, result in action_history:
-            action_history_desc += f'action: {json.dumps(action)}\nresult: {json.dumps(result)}\n'
+        for action_history in self.action_history_array:
+            action_history_desc += f'action: {json.dumps(action_history.action)}\nresult: {json.dumps(action_history.action_result)}\n'
 
         resource_desc = ''
         for resource_id in self.resources:

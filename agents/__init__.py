@@ -4,6 +4,8 @@ from yacs.config import CfgNode as CN
 import jsonschema
 import datetime
 import jsonschema.exceptions
+import dataclasses
+from typing import List
 
 import logging
 logger = logging.getLogger('agent')
@@ -22,12 +24,19 @@ ACTION_SCHEMA = {
 }
 
 
+@dataclasses.dataclass
+class ActionHistory:
+    action: dict
+    action_result: dict
+
+
 class AgentBase():
 
     def __init__(self, cfg_node: CN):
         self.cfg = cfg_node
         self.resources = dict()
         self.tools = dict()
+        self.action_history_array: List[ActionHistory] = []
     
     def add_resource(self, id: str, resource):
         if id not in self.resources:
@@ -44,17 +53,13 @@ class AgentBase():
     def one_time_planning(self, input: str):
         raise NotImplementedError()
     
-    def feedback_planning(self, input: str, action_history):
+    def feedback_planning(self, input: str):
         raise NotImplementedError()
     
-    def summarize(self, input: str, action_history):
+    def summarize(self, input: str):
         raise NotImplementedError()
-
-    def run_action(self, action: dict) -> dict:
-        ''' run an action description
-        {'id': xxx, 'inputs': {'image': xxx}, 'outputs': {'mask': xxx, 'boxes': xxx}}
-        return {"success": true/false, "reason": "xxx"}
-        '''
+    
+    def _run_action(self, action: dict) -> dict:
         # check json
         try:
             jsonschema.validate(action, ACTION_SCHEMA)
@@ -105,7 +110,15 @@ class AgentBase():
             actual_output = actual_output_dict[output_key]
             self.resources[output_resource_id] = actual_output
         return {"success": True}
-            
+
+    def run_action(self, action: dict) -> dict:
+        ''' run an action description
+        {'id': xxx, 'inputs': {'image': xxx}, 'outputs': {'mask': xxx, 'boxes': xxx}}
+        return {"success": true/false, "reason": "xxx"}
+        '''
+        action_res = self._run_action(action)
+        self.action_history_array.append(ActionHistory(action, action_res))
+        return action_res
 
 
     def chat(self, input: str) -> str:
@@ -123,7 +136,7 @@ class AgentBase():
             action_history.append((action, result_description))
 
         # ================= summarize ==============
-        summary = self.summarize(input, action_history)
+        summary = self.summarize(input)
 
         return summary
 
@@ -138,7 +151,7 @@ class AgentBase():
         for i_feedback in range(feedback_limit):
             for i_retry in range(json_format_retries):
                 try:
-                    actions = self.feedback_planning(input, action_history) # possible jsonschema.exceptions.ValidationError
+                    actions = self.feedback_planning(input) # possible jsonschema.exceptions.ValidationError
                     break
                 except jsonschema.exceptions.ValidationError:
                     if (i_retry == json_format_retries - 1):
@@ -156,7 +169,7 @@ class AgentBase():
             self.logw('feedback exceeded limit')
         
         # ================= summarize ==============
-        summary = self.summarize(input, action_history)
+        summary = self.summarize(input)
 
         return summary
             
