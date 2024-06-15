@@ -12,7 +12,7 @@ def log(message):
     # print(f'[{now.strftime("%Y%m%d-%H%M%S")}][INFO] {message}')
 
 # gt should be categorical, check if equal
-def compare_question_answer_groundtruth(user_question, response, gt, need_confirm=False):
+def compare_question_answer_groundtruth(user_question, response, gt, need_confirm=False) -> bool:
     
     json_str = '{"result": true/false}'
     prompt = f'''
