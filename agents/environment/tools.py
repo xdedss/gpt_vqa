@@ -5,7 +5,14 @@ from .resources import ImageResource, JsonResource, MasksResource
 
 import jsonschema
 
+from pathfinding.core.diagonal_movement import DiagonalMovement
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
 import numpy as np
+import cv2
+
+from scipy.ndimage import label
+
 
 DETECTION_ITEM_SCHEMA = {
     "type": "object",
@@ -128,7 +135,7 @@ class DetectionCounting(Tool):
 class MaskArea(Tool):
     ''' counts area '''
     
-    description = 'This tool will count the area of a mask. The first input "mask_to_count" should be the resource id of the mask to count. The output should be the resource id to store the result, the second input "label_to_count" should be the plain text of the label to count. The result contains information about the absolute area in square pixels and the proportion of the mask as a float from 0-1.'
+    description = 'This tool will count the area of a mask. The first input "mask_to_count" should be the resource id of the mask to count. The output should be the resource id to store the result, the second input "label_to_count" should be the plain text of the label to count. The result contains information about the absolute area in square pixels.'
 
     inputs = [{
         'name': 'mask_to_count',
@@ -158,11 +165,121 @@ class MaskArea(Tool):
         
         return {
             'area': JsonResource({
-                'absolut_area': int(raw_count),
-                'proportion': float(proportion),
+                'pixel_area': int(raw_count),
+                # 'proportion': float(proportion),
             })
         }
 
+
+class MaskCount(Tool):
+    ''' counts instances '''
+    
+    description = 'This tool will count the number of instance given a mask. The first input "mask_to_count" should be the resource id of the mask to count. The output should be the resource id to store the result, the second input "label_to_count" should be the plain text of the label to count.'
+
+    inputs = [{
+        'name': 'mask_to_count',
+        'type': 'mask',
+    },{
+        'name': 'label_to_count',
+        'type': 'text',
+    }]
+    outputs = [{
+        'name': 'count',
+        'type': 'json',
+    }]
+
+    def __init__(self) -> None:
+        super().__init__()
+    
+
+    def use(self, inputs):
+        mask = inputs['mask_to_count']
+        label = inputs['label_to_count']
+
+        assert isinstance(mask, MasksResource)
+        mask = mask.data[label].astype(bool)
+        count = count_connected_components(mask)
+        
+        
+        return {
+            'count': JsonResource({
+                'number_of_instances': int(count),
+            })
+        }
+
+def count_connected_components(binary_mask):
+    binary_mask = binary_mask.astype(bool)
+    labeled_array, num_features = label(binary_mask)
+    return num_features
+
+
+class MaskPathFinding(Tool):
+    ''' finds path '''
+    
+    description = 'This tool will identify if there exists a path between 2 given points in a given a mask. The first input "mask_to_find_path" should be the resource id of the mask to find path in. The output should be the resource id to store the path finding result, the second input "label_to_find_path" should be the plain text of the label to find path in. "start_xy" and "end_xy" are the [x, y] coordinate of start and end points. '
+
+    inputs = [{
+        'name': 'mask_to_count',
+        'type': 'mask',
+    },{
+        'name': 'label_to_count',
+        'type': 'text',
+    },{
+        'name': 'start_xy',
+        'type': 'list',
+    },{
+        'name': 'end_xy',
+        'type': 'list',
+    }]
+    outputs = [{
+        'name': 'path_finding_result',
+        'type': 'json',
+    }]
+
+    def __init__(self) -> None:
+        super().__init__()
+    
+
+    def use(self, inputs):
+        mask = inputs['mask_to_count']
+        label = inputs['label_to_count']
+        start_xy = inputs['start_xy']
+        end_xy = inputs['end_xy']
+        start_xy = (int(start_xy[0]), int(start_xy[1]))
+        end_xy = (int(end_xy[0]), int(end_xy[1]))
+
+        assert isinstance(mask, MasksResource)
+        mask = mask.data[label].astype(bool)
+        path = astar(mask, *start_xy, *end_xy)
+        
+        
+        return {
+            'path_finding_result': JsonResource({
+                'has_path': len(path) > 0,
+            })
+        }
+
+def astar(binary_mask, x1, y1, x2, y2, max_size=128):
+
+    original_h, original_w = binary_mask.shape
+    scale = 1.0
+    if max(original_h, original_w) > max_size:
+        scale = max_size / max(original_h, original_w)
+        binary_mask = cv2.resize(binary_mask.astype(np.uint8), None, fx=scale, fy=scale).astype(bool)
+
+    grid = Grid(matrix=binary_mask.astype(int))
+
+    start = grid.node(int(x1 * scale), int(y1 * scale))
+    end = grid.node(int(x2 * scale), int(y2 * scale))
+
+    finder = AStarFinder(diagonal_movement=DiagonalMovement.always)
+    path, runs = finder.find_path(start, end, grid)
+
+    # print('operations:', runs, 'path length:', len(path))
+    # print(grid.grid_str(path=path, start=start, end=end))
+
+    # len(path)==0 means infeasible
+    return [(int(pt.x / scale), int(pt.y / scale)) for pt in path]
 
 
 def execute_user_function(user_function_str, resources):
