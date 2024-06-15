@@ -153,7 +153,7 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
         meta_data['label_path'] = label_path
           
         try:
-            answer, correctness, action_history = evaluate(question, label_path, gt_answer, feedback, need_confirm)
+            answer, correctness, action_history = evaluate(question, label_path, gt_answer, label_type, feedback=feedback, need_confirm=need_confirm)
             meta_data['action_history'] = [
                 {'action': action.action, 'action_result': action.action_result} for action in action_history
             ]
@@ -180,7 +180,7 @@ if __name__ == '__main__':
         filename='simple_agent_rescuenet.log', 
         level=logging.INFO)
 
-    # selected_id = [2]
+    # selected_id = [23]
     # with open('rescuenet_agent_val_tiny.jsonl', 'r') as f:
     #     valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
 
@@ -208,11 +208,11 @@ if __name__ == '__main__':
 
 
     evaluate_all(
-        'rescuenet_agent_val_tiny.jsonl',
+        'rescuenet_agent_val_small_960.jsonl',
         start_index=0,
-        end_index=8,
+        end_index=None,
         feedback=feedback, 
-        db_path='simple_agent_rescuenet_valset.db')
+        db_path='simple_agent_rescuenet_valset_small_960.db')
 
 
 
