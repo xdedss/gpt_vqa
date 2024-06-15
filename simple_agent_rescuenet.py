@@ -11,8 +11,9 @@ from agents.parsers.json import LastJsonParser
 import llm_metrics
 
 import cv2
+import tqdm
 
-import os, json, random, uuid
+import os, json, random, uuid, time
 import logging
 
 import requests
@@ -132,18 +133,20 @@ def evaluate(question, label_path, answer_gt, label_type, feedback=False, need_c
 
 
 def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='default_rescuenet.db', feedback=False, need_confirm=False):
-    db = database_sqlite.Database(db_path)
     
     with open(dataset_jsonl, 'r') as f:
         valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
+    
+    import ray
+    
+    ray.init(num_cpus=4)
 
-    if (end_index is None):
-        end_index = len(valset_objects)
-    for valsest_obj in valset_objects[start_index:end_index]:
-        label_path = valsest_obj['label']
-        question = valsest_obj['instruction']
-        gt_answer = valsest_obj['answer']
-        label_type = valsest_obj['type']
+    @ray.remote(num_cpus=1)
+    def process_valset_item(valset_obj):
+        label_path = valset_obj['label']
+        question = valset_obj['instruction']
+        gt_answer = valset_obj['answer']
+        label_type = valset_obj['type']
 
         image_id = 0 # unused
 
@@ -157,10 +160,12 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
             meta_data['action_history'] = [
                 {'action': action.action, 'action_result': action.action_result} for action in action_history
             ]
+            db = database_sqlite.Database(db_path)
             if (correctness):
                 db.add_data(image_id, question, answer, gt_answer, 'correct', json.dumps(meta_data, ensure_ascii=False))
             else:
                 db.add_data(image_id, question, answer, gt_answer, 'incorrect', json.dumps(meta_data, ensure_ascii=False))
+            db.close()
         except NameError:
             raise
         except Exception as e:
@@ -168,9 +173,22 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
             traceback.print_exc()
             meta_data['error'] = str(e)
             logger.error(e)
+            db = database_sqlite.Database(db_path)
             db.add_data(image_id, question, '', gt_answer, 'error', json.dumps(meta_data, ensure_ascii=False))
-            
-    db.close()
+            db.close()
+
+    if (end_index is None):
+        end_index = len(valset_objects)
+    
+    tasks = []
+    for valset_obj in valset_objects[start_index:end_index]:
+        tasks.append(process_valset_item.remote(valset_obj))
+
+    with tqdm.tqdm(total=len(tasks)) as pbar:
+        while tasks:
+            done, tasks = ray.wait(tasks, num_returns=1)
+            pbar.update(len(done))
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':

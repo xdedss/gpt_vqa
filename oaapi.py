@@ -1,22 +1,34 @@
 
 import openai
 import os
+import time
+import logging
+
+logger = logging.getLogger('oaapi')
 
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 openai.base_url = os.environ.get('OPENAI_API_BASE')
 
 def ask_once(system, user_question: str) -> str:
 
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user_question},
-        ],
-        temperature=0.7,
-    )
-    text = response.choices[0].message.content
-    return (text)
+    for i in range(20):
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user_question},
+                ],
+                temperature=0.7,
+            )
+            text = response.choices[0].message.content
+            return (text)
+
+        except openai.RateLimitError:
+            # we should try again later
+            wait_time = min(2 ** i, 30)
+            logger.warn(f'openai rate limit, retry #{i+1} after {wait_time} s')
+            time.sleep(wait_time)
 
 def generate_desc():
 #     system = '''You will act as 3 experts in remote sensing recognition. Each one is asked to describe the content of an image.
