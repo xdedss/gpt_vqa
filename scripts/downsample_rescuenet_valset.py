@@ -14,11 +14,11 @@ def process_jsonl(input_file, output_file):
         for line in infile:
             json_obj = json.loads(line)
             # keep_prob = keep_probs[json_obj['type']]
-            keep_prob = 0.01
+            keep_prob = 0.25
             if (random.random() < keep_prob):
                 outfile.write(json.dumps(json_obj) + '\n')
 
 if __name__ == "__main__":
-    input_file = 'rescuenet_agent_val_small.json'  # Replace with your input file path
-    output_file = 'rescuenet_agent_val_tiny.json'  # Replace with your output file path
+    input_file = 'rescuenet_agent_val_small.jsonl'  # Replace with your input file path
+    output_file = 'rescuenet_agent_val_small_800.jsonl'  # Replace with your output file path
     process_jsonl(input_file, output_file)

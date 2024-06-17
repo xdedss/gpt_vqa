@@ -49,12 +49,13 @@ def get_answer(question, label_path, feedback=False, need_confirm=False):
         'building with minor damage',
         'building with major damage',
         'building with total destruction',
+        'vehicle',
         'clear road',
         'blocked road',
-        'vehicle',
         'tree',
         'pool',
     ]
+    # fix class name mismatch, this should cause no obvious problem
 
     mask_dict = dict()
 
@@ -195,7 +196,7 @@ if __name__ == '__main__':
 
     feedback = False
     llm_utils.setup_root_logger(
-        filename='simple_agent_rescuenet.log', 
+        filename='simple_agent_rescuenet_notooltips.log', 
         level=logging.INFO)
 
     # selected_id = [23]
@@ -230,7 +231,7 @@ if __name__ == '__main__':
         start_index=0,
         end_index=None,
         feedback=feedback, 
-        db_path='simple_agent_rescuenet_valset_small_960.db')
+        db_path='simple_agent_rescuenet_valset_small_960_notooltips.db')
 
 
 

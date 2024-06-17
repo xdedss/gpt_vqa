@@ -33,9 +33,9 @@ building_desc = [
     ['Building Minor Damage'],
     ['Building Major Damage'],
     ['Building Total Destruction'],
+    ['Vehicle'],
     ['Road-Clear'],
     ['Road-Blocked'],
-    ['Vehicle'],
     ['Tree'],
     ['Pool']
 ]
@@ -46,9 +46,9 @@ class_casual_names = [
     'building with minor damage',
     'building with major damage',
     'building with total destruction',
+    'vehicle', # note: class names on github is reversed
     'clear road',
     'blocked road',
-    'vehicle',
     'tree',
     'pool',
 ]
@@ -123,7 +123,7 @@ def make_counting(image_path, target_path, target_np, output_file):
     for template in templates:
         for i, class_name in enumerate(class_casual_names):
             class_i = i + 1
-            if class_i not in (2, 3, 4, 5, 8, 9):
+            if class_i not in (2, 3, 4, 5, 6, 9, 10): # fix label mismatch
                 continue
             gt = count_connected_components(target_np == class_i)
             instruction = template.format(class_name=class_name)
@@ -146,7 +146,7 @@ def make_connectivity(image_path, target_path, target_np, output_file):
     ]
     
     for template in templates:
-        clear_road_i = 6
+        clear_road_i = 7 # 6->7 fixed label mismatch
         if (np.sum(target_np == clear_road_i) == 0):
             # no road available
             continue
@@ -207,4 +207,4 @@ if __name__ == '__main__':
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/val-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/val-label-img", 
-        "rescuenet_agent_val.json")
+        "rescuenet_regen/rescuenet_agent_val.json")
