@@ -53,8 +53,7 @@ class_casual_names = [
     'pool',
 ]
 
-
-def make_segmentation(image_path, target_path, output_file):
+def make_segmentation(image_path, target_path, output_file, is_val):
     seg_instruction_templates = [
         "{verb} a segmentation map that highlights {class_name} in this image.",
         "{verb} a segmentation map showing the location of {class_name} in this picture.",
@@ -66,10 +65,15 @@ def make_segmentation(image_path, target_path, output_file):
         "{verb} a segmentation map focusing on {class_name} within this picture.",
         "{verb} a segmentation map that identifies and highlights {class_name} in this image."
     ]
-    for seg_instruction in random.sample(seg_instruction_templates, k = 3):
+    if is_val:
+        seg_instruction_templates = seg_instruction_templates[-2:]
+    else:
+        seg_instruction_templates = seg_instruction_templates[:-2]
+    
+    for seg_instruction in random.sample(seg_instruction_templates, k = min(len(seg_instruction_templates), 3)):
         for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
             class_i = i + 1
-            for verb in ['Create', 'Generate', 'Produce']:
+            for verb in [random.choice(['Create', 'Generate', 'Produce'])]:
                 instruction = seg_instruction.format(verb=verb, class_name=class_name)
                 output_file.write(json.dumps({
                     "image": image_path,
@@ -80,7 +84,7 @@ def make_segmentation(image_path, target_path, output_file):
                     "type": "seg",
                 }) + '\n')
 
-def make_existence(image_path, target_path, target_np, output_file):
+def make_existence(image_path, target_path, target_np, output_file, is_val):
     exist_templates = [
         "Can you see any {class_name} in this picture?",
         "Are there any {class_name} visible in this image?",
@@ -93,9 +97,13 @@ def make_existence(image_path, target_path, target_np, output_file):
         "Can {class_name} be found in this picture?",
         "Does the image include any {class_name}?"
     ]
+    if is_val:
+        exist_templates = exist_templates[-2:]
+    else:
+        exist_templates = exist_templates[:-2]
     
-    for template in exist_templates:
-        for i, class_name in enumerate(class_casual_names):
+    for template in random.sample(exist_templates, k = min(len(exist_templates), 3)):
+        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
             class_i = i + 1
             gt = np.sum(target_np == class_i) > 0
             instruction = template.format(class_name=class_name)
@@ -108,7 +116,39 @@ def make_existence(image_path, target_path, target_np, output_file):
                 "type": "existence",
             }) + '\n')
 
-def make_counting(image_path, target_path, target_np, output_file):
+def make_area(image_path, target_path, target_np, output_file, is_val, sqmeter_per_px):
+    area_templates = [
+        "How much area does {class_name} cover in the image?",
+        "Can you determine the area of {class_name} in the photograph?",
+        "What's the total area of {class_name} displayed in the picture?",
+        "Could you calculate the area of {class_name} in the image?",
+        "How much space does {class_name} take up in the picture?",
+        "What is the measurement of the area of {class_name} in the image?",
+        "How large is the area of {class_name} in the photo?",
+        "What is the size of the area that {class_name} covers in the picture?"
+    ]
+    if is_val:
+        area_templates = area_templates[-2:]
+    else:
+        area_templates = area_templates[:-2]
+    
+    for template in random.sample(area_templates, k = min(len(area_templates), 3)):
+        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
+            class_i = i + 1
+            if class_i not in (1, 2, 3, 4, 5, 7, 8, 9):
+                continue
+            gt = np.sum(target_np == class_i) * sqmeter_per_px
+            instruction = template.format(class_name=class_name)
+            output_file.write(json.dumps({
+                "image": image_path,
+                "label": target_path,
+                "instruction": instruction,
+                "answer": f"{gt:.2f}",
+                "criteria": None,
+                "type": "area",
+            }) + '\n')
+
+def make_counting(image_path, target_path, target_np, output_file, is_val):
     templates = [
         "What is the count of {class_name} in this picture?",
         "Can you identify the number of {class_name} shown in this image?",
@@ -119,9 +159,13 @@ def make_counting(image_path, target_path, target_np, output_file):
         "Can you determine the number of {class_name} in this photograph?",
         "How many {class_name} are depicted in this image?",
     ]
+    if is_val:
+        templates = templates[-2:]
+    else:
+        templates = templates[:-2]
     
-    for template in templates:
-        for i, class_name in enumerate(class_casual_names):
+    for template in random.sample(templates, k = min(len(templates), 3)):
+        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
             class_i = i + 1
             if class_i not in (2, 3, 4, 5, 6, 9, 10): # fix label mismatch
                 continue
@@ -136,14 +180,19 @@ def make_counting(image_path, target_path, target_np, output_file):
                 "type": "counting",
             }) + '\n')
 
-def make_connectivity(image_path, target_path, target_np, output_file):
+def make_connectivity(image_path, target_path, target_np, output_file, is_val):
     templates = [
         "Is there a direct path from {A} to {B}?",
         "Is there an unobstructed route from {A} to {B}?",
         "Is there an obvious route from {A} to {B}?",
+        "Is the path from {A} to {B} clear?",
         "Is there an easy passage from {A} to {B}?",
-        "Is the connection from {A} to {B} clear?"
+        "Is the road from {A} to {B} clear?"
     ]
+    if is_val:
+        templates = templates[-2:]
+    else:
+        templates = templates[:-2]
     
     for template in templates:
         clear_road_i = 7 # 6->7 fixed label mismatch
@@ -173,10 +222,11 @@ def make_connectivity(image_path, target_path, target_np, output_file):
 
 
 
-def make_dataset(images_dir, targets_dir, dst_path):
+def make_dataset(images_dir, targets_dir, dst_path, is_val):
     
     images_list = os.listdir(images_dir)
     images_list.sort()
+    # images_list = images_list[:100]
     images_ids = [path.replace('.jpg', '') for path in images_list]
     targets_list_expected = [f'{id}_lab.png' for id in images_ids]
 
@@ -194,17 +244,23 @@ def make_dataset(images_dir, targets_dir, dst_path):
             target = Image.open(target_path)
             target_np = np.array(target)
 
-            make_segmentation(image_path, target_path, f)
+            make_segmentation(image_path, target_path, f, is_val)
             f.flush()
-            make_existence(image_path, target_path, target_np, f)
+            make_existence(image_path, target_path, target_np, f, is_val)
             f.flush()
-            make_counting(image_path, target_path, target_np, f)
+            make_counting(image_path, target_path, target_np, f, is_val)
             f.flush()
-            make_connectivity(image_path, target_path, target_np, f)
+            make_connectivity(image_path, target_path, target_np, f, is_val)
+            f.flush()
+            make_area(image_path, target_path, target_np, f, is_val, 0.02 ** 2)
             f.flush()
 
 if __name__ == '__main__':
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/val-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/val-label-img", 
-        "rescuenet_regen/rescuenet_agent_val.json")
+        "rescuenet_regen_plus/rescuenet_agent_val.jsonl", is_val=True)
+    make_dataset(
+        "D:/LZR/Downloads/documents/RescuNet/train-org-img", 
+        "D:/LZR/Downloads/documents/RescuNet/train-label-img", 
+        "rescuenet_regen_plus/rescuenet_agent_train.jsonl", is_val=False)
