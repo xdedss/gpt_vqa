@@ -14,5 +14,8 @@ def analyze_flag(db_path):
     print(f'errors: {errors}, good: {good}, bad: {bad}')
     print(f'errors: {errors/total:.4f}, good: {good/total:.4f}, bad: {bad/total:.4f}')
 
-analyze_flag('simple_agent_bsb_feedback.db')
+# analyze_flag('simple_agent_bsb_feedback.db')
+analyze_flag('visualglm_bsb.db')
+
+analyze_flag('visualglm_bsb_tuned.db')
 
