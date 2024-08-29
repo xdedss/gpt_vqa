@@ -13,7 +13,7 @@ import llm_metrics
 import cv2
 import tqdm
 
-import os, json, random, uuid, time
+import os, json, random, uuid, time, base64
 import logging
 
 import requests
@@ -23,6 +23,30 @@ import database_sqlite
 import llm_utils
 
 logger = logging.getLogger()
+
+
+def send_visualglm_api(image_path, question) -> str:
+    # Encode the image in base64
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
+    
+    # Prepare the JSON payload
+    payload = {
+        "image": encoded_image,
+        "text": question,
+        "history": []
+    }
+    
+    data = json.dumps(payload)
+    
+    # Send the request to the server
+    url = "http://127.0.0.1:8080"
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url, headers=headers, data=data)
+    
+    # Parse the response and return the "result"
+    response_data = response.json()
+    return response_data.get("result", ""), []
 
 def get_answer_call_api(api_url, image_path, text) -> str:
     # Create a dictionary with the files to be sent
@@ -107,14 +131,14 @@ def evaluate(question, label_path, answer_gt, label_type, feedback=False, need_c
         input('continue?')
 
     # call the agent
-    answer, action_history = get_answer(question, label_path, feedback, need_confirm)
+    # answer, action_history = get_answer(question, label_path, feedback, need_confirm)
 
-    # answer, action_history = get_answer_call_api(
-    #     'http://127.0.0.1:8000/inference', 
-    #     os.path.join('E:\\LZR\\Storage\\Source\\Dataset\\bsb_dataset\\image_val_png', f'{image_id}.png'),
-    #     question)
-    # logger.info("visualglm answer")
-    # logger.info(answer)
+    answer, action_history = send_visualglm_api(
+        # 'http://127.0.0.1:8000/inference', 
+        label_path,
+        question)
+    logger.info("visualglm answer")
+    logger.info(answer)
 
     if (label_type == 'seg'):
         # the agent must call segmentation
@@ -196,7 +220,7 @@ if __name__ == '__main__':
 
     feedback = False
     llm_utils.setup_root_logger(
-        filename='simple_agent_rescuenet_notooltips.log', 
+        filename='simple_agent_rescuenet_visualglm_600.log', 
         level=logging.INFO)
 
     # selected_id = [23]
@@ -225,13 +249,19 @@ if __name__ == '__main__':
     #     logger.info(f'CORRECT: {eval_correctness}')
 
 
+    # res = send_visualglm_api(
+    #     'D:/LZR/Downloads/documents/RescuNet/val-org-img\\10842.jpg',
+    #     'Are there any water visible in this image?',
+    # )
+    # print(res)
+    # xx
 
     evaluate_all(
-        'rescuenet_agent_val_small_960.jsonl',
+        'rescuenet_with_corrected_label/rescuenet_agent_val_small_960.jsonl',
         start_index=0,
         end_index=None,
         feedback=feedback, 
-        db_path='simple_agent_rescuenet_valset_small_960_notooltips.db')
+        db_path='simple_agent_rescuenet_valset_small_960_visualglm_tuned600.db')
 
 
 

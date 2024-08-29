@@ -1,8 +1,11 @@
 
 import sys
 import os
+import io
 import json
 import random
+import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 
 import tqdm
 from PIL import Image
@@ -194,7 +197,7 @@ def make_connectivity(image_path, target_path, target_np, output_file, is_val):
     else:
         templates = templates[:-2]
     
-    for template in templates:
+    for template in random.sample(templates, k = min(len(templates), 3)):
         clear_road_i = 7 # 6->7 fixed label mismatch
         if (np.sum(target_np == clear_road_i) == 0):
             # no road available
@@ -221,8 +224,36 @@ def make_connectivity(image_path, target_path, target_np, output_file, is_val):
             }) + '\n')
 
 
+def process_one_image(args):
+    image_id, image_fname, target_fname, images_dir, targets_dir, is_val = args
+
+    buffer = io.StringIO()
+
+    image_path = os.path.join(images_dir, image_fname)
+    target_path = os.path.join(targets_dir, target_fname)
+
+    # image = Image.open(image_path).convert('RGB')
+    target = Image.open(target_path)
+    target_np = np.array(target)
+
+    make_segmentation(image_path, target_path, buffer, is_val)
+    make_existence(image_path, target_path, target_np, buffer, is_val)
+    make_counting(image_path, target_path, target_np, buffer, is_val)
+    make_connectivity(image_path, target_path, target_np, buffer, is_val)
+    make_area(image_path, target_path, target_np, buffer, is_val, 0.02 ** 2)
+
+    # strings_to_write.append(buffer.getvalue())
+    return buffer.getvalue()
+
+def subproc_initializer():
+    # this is to make sure that ctrl-c terminates gracefully
+    import signal
+    signal.signal(signal.SIGINT, lambda: None)
 
 def make_dataset(images_dir, targets_dir, dst_path, is_val):
+
+    if not os.path.exists(os.path.dirname(dst_path)):
+        os.makedirs(os.path.dirname(dst_path), exist_ok=True)
     
     images_list = os.listdir(images_dir)
     images_list.sort()
@@ -233,34 +264,63 @@ def make_dataset(images_dir, targets_dir, dst_path, is_val):
     for target_fname in targets_list_expected:
         assert os.path.isfile(os.path.join(targets_dir, target_fname))
     
+    # strings_to_write = []
+    
+    task_args = []
+    for image_id, image_fname, target_fname in zip(images_ids, images_list, targets_list_expected):
+        task_args.append((image_id, image_fname, target_fname, images_dir, targets_dir, is_val))
+
+    # with ThreadPoolExecutor(max_workers=16) as pool:
+    #     list( # list() forces the iterator to be fully evaluated
+    #         tqdm.tqdm(
+    #             pool.map(process_one_image, zip(images_ids, images_list, targets_list_expected)),
+    #             total=len(images_ids),
+    #         )
+    #     )
+    
+    with multiprocessing.Pool(8, subproc_initializer) as pool:
+        try:
+            strings_to_write = list( # list() forces the iterator to be fully evaluated
+                tqdm.tqdm(
+                    pool.imap(process_one_image, task_args),
+                    total=len(images_ids),
+                )
+            )
+            print('got strings to write', len(strings_to_write), strings_to_write[0])
+        except KeyboardInterrupt as e:
+            print('keyboard interrupt, breaking current progress')
+            pass
+
     with open(dst_path, 'w', encoding='utf-8') as f:
-        for image_id, image_fname, target_fname in zip(tqdm.tqdm(images_ids), images_list, targets_list_expected):
-            # print(image_fname, target_fname)
-            # analyze label
-            image_path = os.path.join(images_dir, image_fname)
-            target_path = os.path.join(targets_dir, target_fname)
+        for s in strings_to_write:
+            f.write(s)
+        # for image_id, image_fname, target_fname in zip(tqdm.tqdm(images_ids), images_list, targets_list_expected):
+        #     # print(image_fname, target_fname)
+        #     # analyze label
+        #     image_path = os.path.join(images_dir, image_fname)
+        #     target_path = os.path.join(targets_dir, target_fname)
 
-            image = Image.open(image_path).convert('RGB')
-            target = Image.open(target_path)
-            target_np = np.array(target)
+        #     image = Image.open(image_path).convert('RGB')
+        #     target = Image.open(target_path)
+        #     target_np = np.array(target)
 
-            make_segmentation(image_path, target_path, f, is_val)
-            f.flush()
-            make_existence(image_path, target_path, target_np, f, is_val)
-            f.flush()
-            make_counting(image_path, target_path, target_np, f, is_val)
-            f.flush()
-            make_connectivity(image_path, target_path, target_np, f, is_val)
-            f.flush()
-            make_area(image_path, target_path, target_np, f, is_val, 0.02 ** 2)
-            f.flush()
+        #     make_segmentation(image_path, target_path, f, is_val)
+        #     f.flush()
+        #     make_existence(image_path, target_path, target_np, f, is_val)
+        #     f.flush()
+        #     make_counting(image_path, target_path, target_np, f, is_val)
+        #     f.flush()
+        #     make_connectivity(image_path, target_path, target_np, f, is_val)
+        #     f.flush()
+        #     make_area(image_path, target_path, target_np, f, is_val, 0.02 ** 2)
+        #     f.flush()
 
 if __name__ == '__main__':
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/val-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/val-label-img", 
-        "rescuenet_regen_plus/rescuenet_agent_val.jsonl", is_val=True)
+        "rescuenet_regen_plus_fast/rescuenet_agent_val.jsonl", is_val=True)
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/train-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/train-label-img", 
-        "rescuenet_regen_plus/rescuenet_agent_train.jsonl", is_val=False)
+        "rescuenet_regen_plus_fast/rescuenet_agent_train.jsonl", is_val=False)
