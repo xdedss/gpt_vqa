@@ -44,6 +44,7 @@ building_desc = [
 ]
 
 class_casual_names = [
+    # this list does not include background(0). the index of 'water' should start with 1.
     'water',
     'building without damage',
     'building with minor damage',
@@ -55,6 +56,36 @@ class_casual_names = [
     'tree',
     'pool',
 ]
+
+
+def make_detection(image_path, target_path, output_file, is_val):
+    templates = [
+        "Detect {class_name} within this image.",
+        "Locate {class_name} in this picture.",
+        "Spot {class_name} in this image.",
+        "Find the {class_name} present in this image.",
+        "Perform detection of the {class_name} in this photograph.",
+        "Determine the location of {class_name} in this image.",
+        "Recognize and locate {class_name} in this picture.",
+        "Search for {class_name} in this image and get bounding boxes.",
+    ]
+    if is_val:
+        templates = templates[-2:]
+    else:
+        templates = templates[:-2]
+    
+    for det_instruction in random.sample(templates, k = min(len(templates), 2)):
+        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 2):
+            class_i = i + 1
+            instruction = det_instruction.format(class_name=class_name)
+            output_file.write(json.dumps({
+                "image": image_path,
+                "label": target_path,
+                "instruction": instruction,
+                "answer": "",
+                "plan": ["det"],
+                "type": "det",
+            }) + '\n')
 
 def make_segmentation(image_path, target_path, output_file, is_val):
     seg_instruction_templates = [
@@ -73,8 +104,8 @@ def make_segmentation(image_path, target_path, output_file, is_val):
     else:
         seg_instruction_templates = seg_instruction_templates[:-2]
     
-    for seg_instruction in random.sample(seg_instruction_templates, k = min(len(seg_instruction_templates), 3)):
-        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
+    for seg_instruction in random.sample(seg_instruction_templates, k = min(len(seg_instruction_templates), 2)):
+        for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 2):
             class_i = i + 1
             for verb in [random.choice(['Create', 'Generate', 'Produce'])]:
                 instruction = seg_instruction.format(verb=verb, class_name=class_name)
@@ -83,7 +114,7 @@ def make_segmentation(image_path, target_path, output_file, is_val):
                     "label": target_path,
                     "instruction": instruction,
                     "answer": "",
-                    "criteria": f"called_segmentation_{class_i}",
+                    "plan": ["seg"],
                     "type": "seg",
                 }) + '\n')
 
@@ -115,7 +146,7 @@ def make_existence(image_path, target_path, target_np, output_file, is_val):
                 "label": target_path,
                 "instruction": instruction,
                 "answer": "yes" if gt else "no",
-                "criteria": None,
+                "plan": ["seg_or_det"],
                 "type": "existence",
             }) + '\n')
 
@@ -147,7 +178,7 @@ def make_area(image_path, target_path, target_np, output_file, is_val, sqmeter_p
                 "label": target_path,
                 "instruction": instruction,
                 "answer": f"{gt:.2f}",
-                "criteria": None,
+                "plan": ["seg"],
                 "type": "area",
             }) + '\n')
 
@@ -170,7 +201,7 @@ def make_counting(image_path, target_path, target_np, output_file, is_val):
     for template in random.sample(templates, k = min(len(templates), 3)):
         for i, class_name in random.sample(list(enumerate(class_casual_names)), k = 3):
             class_i = i + 1
-            if class_i not in (2, 3, 4, 5, 6, 9, 10): # fix label mismatch
+            if class_i not in (2, 3, 4, 5, 6, 10): # fix label mismatch # remove 9tree
                 continue
             gt = count_connected_components(target_np == class_i)
             instruction = template.format(class_name=class_name)
@@ -179,7 +210,7 @@ def make_counting(image_path, target_path, target_np, output_file, is_val):
                 "label": target_path,
                 "instruction": instruction,
                 "answer": str(gt),
-                "criteria": None,
+                "plan": ["det"],
                 "type": "counting",
             }) + '\n')
 
@@ -219,7 +250,7 @@ def make_connectivity(image_path, target_path, target_np, output_file, is_val):
                 "label": target_path,
                 "instruction": instruction,
                 "answer": gt,
-                "criteria": None,
+                "plan": ["seg"],
                 "type": "connectivity",
             }) + '\n')
 
@@ -236,6 +267,7 @@ def process_one_image(args):
     target = Image.open(target_path)
     target_np = np.array(target)
 
+    make_detection(image_path, target_path, buffer, is_val)
     make_segmentation(image_path, target_path, buffer, is_val)
     make_existence(image_path, target_path, target_np, buffer, is_val)
     make_counting(image_path, target_path, target_np, buffer, is_val)
@@ -319,8 +351,8 @@ if __name__ == '__main__':
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/val-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/val-label-img", 
-        "rescuenet_regen_plus_fast/rescuenet_agent_val.jsonl", is_val=True)
+        "rescuenet_regen_plus_det/rescuenet_agent_val.jsonl", is_val=True)
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/train-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/train-label-img", 
-        "rescuenet_regen_plus_fast/rescuenet_agent_train.jsonl", is_val=False)
+        "rescuenet_regen_plus_det/rescuenet_agent_train.jsonl", is_val=False)
