@@ -12,6 +12,8 @@ import llm_metrics
 
 import cv2
 import tqdm
+    
+import ray
 
 import os, json, random, uuid, time, base64
 import logging
@@ -62,7 +64,7 @@ def get_answer_call_api(api_url, image_path, text) -> str:
     return response.text, []
 
 
-def get_answer(question, label_path, feedback=False, need_confirm=False):
+def get_answer(question, label_path, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo'):
     ''' returns ans, action_history '''
 
     label_img = cv2.imread(label_path, cv2.IMREAD_GRAYSCALE)
@@ -88,10 +90,12 @@ def get_answer(question, label_path, feedback=False, need_confirm=False):
         class_name = class_casual_names[i]
         mask_dict[class_name] = binary_mask
 
+    agent_cfg = CN()
+    agent_cfg.model_name = model_name
     if (feedback):
-        a = SimpleAgentFeedback(CN())
+        a = SimpleAgentFeedback(agent_cfg)
     else:
-        a = SimpleAgent(CN())
+        a = SimpleAgent(agent_cfg)
     a.add_tool(
         'semantic_segmentation', 
         ImageMetaTool('seg', f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(class_casual_names)}', output_type='masks'))
@@ -131,22 +135,29 @@ def evaluate(question, label_path, answer_gt, label_type, feedback=False, need_c
         input('continue?')
 
     # call the agent
-    # answer, action_history = get_answer(question, label_path, feedback, need_confirm)
+    answer, action_history = get_answer(question, label_path, feedback, need_confirm, 'gpt-4o-mini')
 
-    answer, action_history = send_visualglm_api(
-        # 'http://127.0.0.1:8000/inference', 
-        label_path,
-        question)
-    logger.info("visualglm answer")
+    # answer, action_history = send_visualglm_api(
+    #     # 'http://127.0.0.1:8000/inference', 
+    #     label_path,
+    #     question)
+    # logger.info("visualglm answer")
     logger.info(answer)
+
+    # check what get called
+    has_seg = False
+    has_det = False
+    for action in action_history:
+        if (action.action['id'] == 'semantic_segmentation'):
+            has_seg = True
+            break
+    for action in action_history:
+        if (action.action['id'] == 'object_detection'):
+            has_det = True
+            break
 
     if (label_type == 'seg'):
         # the agent must call segmentation
-        has_seg = False
-        for action in action_history:
-            if (action.action['id'] == 'semantic_segmentation'):
-                has_seg = True
-                break
         correctness = has_seg
     else:
         # now use gpt metric
@@ -161,10 +172,6 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
     
     with open(dataset_jsonl, 'r') as f:
         valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
-    
-    import ray
-    
-    ray.init(num_cpus=4)
 
     @ray.remote(num_cpus=1)
     def process_valset_item(valset_obj):
@@ -219,9 +226,18 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
 if __name__ == '__main__':
 
     feedback = False
-    llm_utils.setup_root_logger(
-        filename='simple_agent_rescuenet_visualglm_600.log', 
-        level=logging.INFO)
+    
+    def logger_setup():
+        import sys
+        sys.path.append('./')
+        import llm_utils
+        llm_utils.setup_root_logger(
+            filename='fff.log', 
+            level=logging.WARNING)
+    
+    logger_setup()
+
+    ray.init(num_cpus=4, runtime_env={"worker_process_setup_hook": logger_setup})
 
     # selected_id = [23]
     # with open('rescuenet_agent_val_tiny.jsonl', 'r') as f:
@@ -257,11 +273,11 @@ if __name__ == '__main__':
     # xx
 
     evaluate_all(
-        'rescuenet_with_corrected_label/rescuenet_agent_val_small_960.jsonl',
+        'rescuenet_regen_plus/rescuenet_agent_val_small_960.jsonl',
         start_index=0,
         end_index=None,
         feedback=feedback, 
-        db_path='simple_agent_rescuenet_valset_small_960_visualglm_tuned600.db')
+        db_path='fff.db')
 
 
 
