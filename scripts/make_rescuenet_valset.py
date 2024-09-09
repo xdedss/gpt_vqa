@@ -21,9 +21,11 @@ from agents.environment.tools import count_connected_components, astar
     {
         "image": "path/to/image",
         "label": "path/to/label/image",
+        "det_label": "path/to/label/json",
         "instruction": "xxx",
         "answer": "xxx",
-        "criteria": "called_segmentation", # this is for basic tasks
+        # "criteria": "called_segmentation", # this is for basic tasks
+        "plan": ["seg"],
         "type": "question type",
     }
 ]
@@ -58,7 +60,7 @@ class_casual_names = [
 ]
 
 
-def make_detection(image_path, target_path, output_file, is_val):
+def make_detection(image_path, target_path, det_label_path, output_file, is_val):
     templates = [
         "Detect {class_name} within this image.",
         "Locate {class_name} in this picture.",
@@ -81,13 +83,14 @@ def make_detection(image_path, target_path, output_file, is_val):
             output_file.write(json.dumps({
                 "image": image_path,
                 "label": target_path,
+                "det_label": det_label_path,
                 "instruction": instruction,
                 "answer": "",
                 "plan": ["det"],
                 "type": "det",
             }) + '\n')
 
-def make_segmentation(image_path, target_path, output_file, is_val):
+def make_segmentation(image_path, target_path, det_label_path, output_file, is_val):
     seg_instruction_templates = [
         "{verb} a segmentation map that highlights {class_name} in this image.",
         "{verb} a segmentation map showing the location of {class_name} in this picture.",
@@ -112,13 +115,14 @@ def make_segmentation(image_path, target_path, output_file, is_val):
                 output_file.write(json.dumps({
                     "image": image_path,
                     "label": target_path,
+                    "det_label": det_label_path,
                     "instruction": instruction,
                     "answer": "",
                     "plan": ["seg"],
                     "type": "seg",
                 }) + '\n')
 
-def make_existence(image_path, target_path, target_np, output_file, is_val):
+def make_existence(image_path, target_path, det_label_path, target_np, output_file, is_val):
     exist_templates = [
         "Can you see any {class_name} in this picture?",
         "Are there any {class_name} visible in this image?",
@@ -144,13 +148,14 @@ def make_existence(image_path, target_path, target_np, output_file, is_val):
             output_file.write(json.dumps({
                 "image": image_path,
                 "label": target_path,
+                "det_label": det_label_path,
                 "instruction": instruction,
                 "answer": "yes" if gt else "no",
                 "plan": ["seg_or_det"],
                 "type": "existence",
             }) + '\n')
 
-def make_area(image_path, target_path, target_np, output_file, is_val, sqmeter_per_px):
+def make_area(image_path, target_path, det_label_path, target_np, output_file, is_val, sqmeter_per_px):
     area_templates = [
         "How much area does {class_name} cover in the image?",
         "Can you determine the area of {class_name} in the photograph?",
@@ -176,13 +181,14 @@ def make_area(image_path, target_path, target_np, output_file, is_val, sqmeter_p
             output_file.write(json.dumps({
                 "image": image_path,
                 "label": target_path,
+                "det_label": det_label_path,
                 "instruction": instruction,
                 "answer": f"{gt:.2f}",
                 "plan": ["seg"],
                 "type": "area",
             }) + '\n')
 
-def make_counting(image_path, target_path, target_np, output_file, is_val):
+def make_counting(image_path, target_path, det_label_path, target_np, output_file, is_val):
     templates = [
         "What is the count of {class_name} in this picture?",
         "Can you identify the number of {class_name} shown in this image?",
@@ -208,13 +214,14 @@ def make_counting(image_path, target_path, target_np, output_file, is_val):
             output_file.write(json.dumps({
                 "image": image_path,
                 "label": target_path,
+                "det_label": det_label_path,
                 "instruction": instruction,
                 "answer": str(gt),
                 "plan": ["det"],
                 "type": "counting",
             }) + '\n')
 
-def make_connectivity(image_path, target_path, target_np, output_file, is_val):
+def make_connectivity(image_path, target_path, det_label_path, target_np, output_file, is_val):
     templates = [
         "Is there a direct path from {A} to {B}?",
         "Is there an unobstructed route from {A} to {B}?",
@@ -248,6 +255,7 @@ def make_connectivity(image_path, target_path, target_np, output_file, is_val):
             output_file.write(json.dumps({
                 "image": image_path,
                 "label": target_path,
+                "det_label": det_label_path,
                 "instruction": instruction,
                 "answer": gt,
                 "plan": ["seg"],
@@ -256,23 +264,24 @@ def make_connectivity(image_path, target_path, target_np, output_file, is_val):
 
 
 def process_one_image(args):
-    image_id, image_fname, target_fname, images_dir, targets_dir, is_val = args
+    image_id, image_fname, target_fname, det_label_fname, images_dir, targets_dir, det_label_dir, is_val = args
 
     buffer = io.StringIO()
 
     image_path = os.path.join(images_dir, image_fname)
     target_path = os.path.join(targets_dir, target_fname)
+    det_label_path = os.path.join(det_label_dir, det_label_fname)
 
     # image = Image.open(image_path).convert('RGB')
     target = Image.open(target_path)
     target_np = np.array(target)
 
-    make_detection(image_path, target_path, buffer, is_val)
-    make_segmentation(image_path, target_path, buffer, is_val)
-    make_existence(image_path, target_path, target_np, buffer, is_val)
-    make_counting(image_path, target_path, target_np, buffer, is_val)
-    make_connectivity(image_path, target_path, target_np, buffer, is_val)
-    make_area(image_path, target_path, target_np, buffer, is_val, 0.02 ** 2)
+    make_detection(image_path, target_path, det_label_path, buffer, is_val)
+    make_segmentation(image_path, target_path, det_label_path, buffer, is_val)
+    make_existence(image_path, target_path, det_label_path, target_np, buffer, is_val)
+    make_counting(image_path, target_path, det_label_path, target_np, buffer, is_val)
+    make_connectivity(image_path, target_path, det_label_path, target_np, buffer, is_val)
+    make_area(image_path, target_path, det_label_path, target_np, buffer, is_val, 0.02 ** 2)
 
     # strings_to_write.append(buffer.getvalue())
     return buffer.getvalue()
@@ -282,7 +291,7 @@ def subproc_initializer():
     import signal
     signal.signal(signal.SIGINT, lambda: None)
 
-def make_dataset(images_dir, targets_dir, dst_path, is_val):
+def make_dataset(images_dir, targets_dir, det_label_dir, dst_path, is_val):
 
     if not os.path.exists(os.path.dirname(dst_path)):
         os.makedirs(os.path.dirname(dst_path), exist_ok=True)
@@ -292,15 +301,18 @@ def make_dataset(images_dir, targets_dir, dst_path, is_val):
     # images_list = images_list[:100]
     images_ids = [path.replace('.jpg', '') for path in images_list]
     targets_list_expected = [f'{id}_lab.png' for id in images_ids]
+    det_label_list_expected = [f'{id}_lab.json' for id in images_ids]
 
     for target_fname in targets_list_expected:
         assert os.path.isfile(os.path.join(targets_dir, target_fname))
+    for det_label_fname in det_label_list_expected:
+        assert os.path.isfile(os.path.join(det_label_dir, det_label_fname))
     
     # strings_to_write = []
     
     task_args = []
-    for image_id, image_fname, target_fname in zip(images_ids, images_list, targets_list_expected):
-        task_args.append((image_id, image_fname, target_fname, images_dir, targets_dir, is_val))
+    for image_id, image_fname, target_fname, det_label_fname in zip(images_ids, images_list, targets_list_expected, det_label_list_expected):
+        task_args.append((image_id, image_fname, target_fname, det_label_fname, images_dir, targets_dir, det_label_dir, is_val))
 
     # with ThreadPoolExecutor(max_workers=16) as pool:
     #     list( # list() forces the iterator to be fully evaluated
@@ -351,8 +363,10 @@ if __name__ == '__main__':
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/val-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/val-label-img", 
+        "D:/LZR/Downloads/documents/RescuNet/val-label-det", 
         "rescuenet_regen_plus_det/rescuenet_agent_val.jsonl", is_val=True)
     make_dataset(
         "D:/LZR/Downloads/documents/RescuNet/train-org-img", 
         "D:/LZR/Downloads/documents/RescuNet/train-label-img", 
+        "D:/LZR/Downloads/documents/RescuNet/train-label-det", 
         "rescuenet_regen_plus_det/rescuenet_agent_train.jsonl", is_val=False)
