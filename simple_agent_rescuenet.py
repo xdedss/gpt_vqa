@@ -64,10 +64,12 @@ def get_answer_call_api(api_url, image_path, text) -> str:
     return response.text, []
 
 
-def get_answer(question, label_path, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo'):
+def get_answer(question, label_path, det_label_path, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo'):
     ''' returns ans, action_history '''
 
     label_img = cv2.imread(label_path, cv2.IMREAD_GRAYSCALE)
+    with open(det_label_path, 'r') as f:
+        det_label = json.load(f)
     
     class_casual_names = [
         'water',
@@ -82,6 +84,15 @@ def get_answer(question, label_path, feedback=False, need_confirm=False, model_n
         'pool',
     ]
     # fix class name mismatch, this should cause no obvious problem
+    
+    obj_casual_names = [
+        'building without damage',
+        'building with minor damage',
+        'building with major damage',
+        'building with total destruction',
+        'vehicle',
+        'pool',
+    ]
 
     mask_dict = dict()
 
@@ -89,6 +100,11 @@ def get_answer(question, label_path, feedback=False, need_confirm=False, model_n
         binary_mask = label_img == (i + 1)
         class_name = class_casual_names[i]
         mask_dict[class_name] = binary_mask
+
+    for object in det_label:
+        # convert to casual names
+        # type counts from 0=bg 1=water, ...
+        object['label'] = class_casual_names[object['type'] - 1]
 
     agent_cfg = CN()
     agent_cfg.model_name = model_name
@@ -98,13 +114,24 @@ def get_answer(question, label_path, feedback=False, need_confirm=False, model_n
         a = SimpleAgent(agent_cfg)
     a.add_tool(
         'semantic_segmentation', 
-        ImageMetaTool('seg', f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(class_casual_names)}', output_type='masks'))
+        ImageMetaTool(
+            'seg', 
+            f'this tool takes an image, performs semantic segmentation, and returns masks with following labels: {json.dumps(class_casual_names)}', output_type='masks'))
+    a.add_tool(
+        'object_detection', 
+        ImageMetaTool(
+            'det', 
+            f'this tool takes an image, performs object detection, and returns an array of objects, possibly of the following types: {json.dumps(obj_casual_names)}', output_type='json'))
     a.add_tool(
         'mask_area_calculation',
-        MaskArea())
+        MaskArea(sqmeter_per_px=0.02**2))
+    # a.add_tool(
+    #     'mask_count',
+    #     MaskCount())
     a.add_tool(
-        'mask_count',
-        MaskCount())
+        'object_count',
+        DetectionCounting(),
+    )
     a.add_tool(
         'mask_path_finding',
         MaskPathFinding())
@@ -112,6 +139,7 @@ def get_answer(question, label_path, feedback=False, need_confirm=False, model_n
     # a.add_tool('python', PythonTool())
     a.add_resource('input', ImageResource(None, meta={
         'seg': MasksResource(mask_dict),
+        'det': JsonResource(det_label)
     }))
     a.require_confirm = need_confirm
     request = question
@@ -128,14 +156,14 @@ def count_det_label(data, label):
             count += 1
     return count
 
-def evaluate(question, label_path, answer_gt, label_type, feedback=False, need_confirm=False):
+def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_type, feedback=False, need_confirm=False):
 
     logger.info(f'QUESTION:\n{question}\nANSWER GT:\n{answer_gt}')
     if (need_confirm):
         input('continue?')
 
     # call the agent
-    answer, action_history = get_answer(question, label_path, feedback, need_confirm, 'gpt-4o-mini')
+    answer, action_history = get_answer(question, label_path, det_label_path, feedback, need_confirm, 'gpt-4o-mini')
 
     # answer, action_history = send_visualglm_api(
     #     # 'http://127.0.0.1:8000/inference', 
@@ -155,15 +183,29 @@ def evaluate(question, label_path, answer_gt, label_type, feedback=False, need_c
         if (action.action['id'] == 'object_detection'):
             has_det = True
             break
+    plan_criteria = {
+        'det': has_det,
+        'seg': has_seg,
+        'seg_or_det': has_det or has_seg,
+    }
+    plan_correct = True
+    for plan_item in gt_plan:
+        plan_correct = plan_correct and plan_criteria[plan_item]
+
 
     if (label_type == 'seg'):
         # the agent must call segmentation
-        correctness = has_seg
+        ans_correct = "invalid"
     else:
         # now use gpt metric
-        correctness = llm_utils.retry_until_succeed(
+        ans_correct = llm_utils.retry_until_succeed(
             lambda: llm_metrics.compare_question_answer_groundtruth(question, answer, answer_gt)
         )
+    
+    correctness = {
+        'ans': ans_correct,
+        'plan': plan_correct,
+    }
 
     return answer, correctness, action_history
 
@@ -173,12 +215,14 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
     with open(dataset_jsonl, 'r') as f:
         valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
 
-    @ray.remote(num_cpus=1)
+    # @ray.remote(num_cpus=1)
     def process_valset_item(valset_obj):
         label_path = valset_obj['label']
+        det_label_path = valset_obj['det_label']
         question = valset_obj['instruction']
         gt_answer = valset_obj['answer']
         label_type = valset_obj['type']
+        gt_plan = valset_obj['plan']
 
         image_id = 0 # unused
 
@@ -188,15 +232,15 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
         meta_data['label_path'] = label_path
           
         try:
-            answer, correctness, action_history = evaluate(question, label_path, gt_answer, label_type, feedback=feedback, need_confirm=need_confirm)
+            answer, correctness, action_history = evaluate(question, label_path, det_label_path, gt_answer, gt_plan, label_type, feedback=feedback, need_confirm=need_confirm)
             meta_data['action_history'] = [
                 {'action': action.action, 'action_result': action.action_result} for action in action_history
             ]
             db = database_sqlite.Database(db_path)
-            if (correctness):
-                db.add_data(image_id, question, answer, gt_answer, 'correct', json.dumps(meta_data, ensure_ascii=False))
-            else:
-                db.add_data(image_id, question, answer, gt_answer, 'incorrect', json.dumps(meta_data, ensure_ascii=False))
+            db.add_data(
+                image_id, question, answer, gt_answer, 
+                json.dumps(correctness, ensure_ascii=False), 
+                json.dumps(meta_data, ensure_ascii=False))
             db.close()
         except NameError:
             raise
@@ -214,13 +258,14 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
     
     tasks = []
     for valset_obj in valset_objects[start_index:end_index]:
-        tasks.append(process_valset_item.remote(valset_obj))
+        process_valset_item(valset_obj)
+        # tasks.append(process_valset_item.remote(valset_obj))
 
-    with tqdm.tqdm(total=len(tasks)) as pbar:
-        while tasks:
-            done, tasks = ray.wait(tasks, num_returns=1)
-            pbar.update(len(done))
-            time.sleep(0.1)
+    # with tqdm.tqdm(total=len(tasks)) as pbar:
+    #     while tasks:
+    #         done, tasks = ray.wait(tasks, num_returns=1)
+    #         pbar.update(len(done))
+    #         time.sleep(0.1)
 
 
 if __name__ == '__main__':
@@ -273,11 +318,11 @@ if __name__ == '__main__':
     # xx
 
     evaluate_all(
-        'rescuenet_regen_plus/rescuenet_agent_val_small_960.jsonl',
+        'rescuenet_regen_plus_det/rescuenet_agent_val_small_960.jsonl',
         start_index=0,
         end_index=None,
         feedback=feedback, 
-        db_path='fff.db')
+        db_path='with_det_960.db')
 
 
 

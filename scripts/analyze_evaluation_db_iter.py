@@ -3,7 +3,7 @@ import json
 import numpy as np
 
 # Connect to the SQLite database
-conn = sqlite3.connect('simple_agent_rescuenet_valset_small_960_visualglm_untuned.db')
+conn = sqlite3.connect('with_det_960.db')
 cursor = conn.cursor()
 
 # Define the table name
@@ -20,6 +20,8 @@ rows = cursor.fetchall()
 column_names = [description[0] for description in cursor.description]
 
 # Iterate through each row and convert to JSON
+cat_plans = dict()
+all_plans = []
 cat_results = dict()
 all_results = []
 for row in rows:
@@ -29,15 +31,11 @@ for row in rows:
     label_type = info_obj['label_type']
     q = row_dict['question']
 
-    is_correct = row_dict['flag'] == 'correct'
+    evaluation_res = json.loads(row_dict['flag'])
     # is_correct = row_dict['answer'].strip() == row_dict['answer_gt'].strip()
 
     cat = label_type
-    if (label_type == 'seg'):
-        continue
     if (label_type == 'counting'):
-        # if (row_dict['answer_gt'] == '0'):
-        #     continue
         if ('building' in q):
             cat = 'counting_building'
         else:
@@ -48,15 +46,26 @@ for row in rows:
         else:
             cat = 'existence'
     
+    if (label_type not in ['seg', 'det']):
+        # check ans
+        if (cat not in cat_results):
+            cat_results[cat] = []
+        cat_results[cat].append(evaluation_res['ans'])
+        all_results.append(evaluation_res['ans'])
+        
     
-    if (cat not in cat_results):
-        cat_results[cat] = []
-    cat_results[cat].append(is_correct)
-    all_results.append(is_correct)
+    # always check plan
+    if (cat not in cat_plans):
+        cat_plans[cat] = []
+    cat_plans[cat].append(evaluation_res['plan'])
+    all_plans.append(evaluation_res['plan'])
     
 
 print('all', round(np.mean(all_results), 6))
 print({k: round(np.mean(cat_results[k]), 6) for k in cat_results})
+
+print('all', round(np.mean(all_plans), 6))
+print({k: round(np.mean(cat_plans[k]), 6) for k in cat_plans})
 
 # Close the database connection
 conn.close()
