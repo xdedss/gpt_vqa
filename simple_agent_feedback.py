@@ -94,7 +94,7 @@ Here is the user's request:
 
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt)
+        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
 
         self.log('llm reply:')
         self.log(res)
@@ -178,7 +178,7 @@ Here is the user's request:
         self.log(prompt)
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt)
+        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
 
         self.log('llm reply:')
         self.log(res)

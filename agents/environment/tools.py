@@ -179,9 +179,9 @@ class MaskArea(Tool):
         'type': 'json',
     }]
 
-    def __init__(self) -> None:
+    def __init__(self, sqmeter_per_px = 0.0004) -> None:
         super().__init__()
-    
+        self.sqmeter_per_px = sqmeter_per_px
 
     def use(self, inputs):
         mask = inputs['mask_to_count']
@@ -191,11 +191,12 @@ class MaskArea(Tool):
         mask = mask.data[label].astype(bool)
         raw_count = mask.sum()
         proportion = mask.mean()
-        
+        sq_meter = raw_count * self.sqmeter_per_px
         
         return {
             'area': JsonResource({
-                'pixel_area': int(raw_count),
+                'square_meter': sq_meter,
+                # 'pixel_area': int(raw_count),
                 # 'proportion': float(proportion),
             })
         }

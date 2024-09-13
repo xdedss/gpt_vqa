@@ -8,10 +8,10 @@ import oaapi
 
 import logging
 
-def setup_root_logger(*, console=True, level=logging.DEBUG, filename=None):
+def setup_root_logger(*, console=True, level=logging.DEBUG, filename=None, file_level=logging.INFO):
 
     root_logger = logging.getLogger()
-    root_logger.setLevel(level)
+    root_logger.setLevel(logging.DEBUG)
     for handler in root_logger.handlers:
         root_logger.removeHandler(handler)
     
@@ -19,7 +19,7 @@ def setup_root_logger(*, console=True, level=logging.DEBUG, filename=None):
     
     if (filename is not None):
         file_handler = logging.FileHandler(filename)
-        file_handler.setLevel(level)  # Set the log level for the file handler
+        file_handler.setLevel(file_level)  # Set the log level for the file handler
         file_handler.setFormatter(formatter)
         root_logger.addHandler(file_handler)
 

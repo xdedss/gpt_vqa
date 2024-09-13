@@ -9,12 +9,14 @@ logger = logging.getLogger('oaapi')
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 openai.base_url = os.environ.get('OPENAI_API_BASE')
 
-def ask_once(system, user_question: str) -> str:
+def ask_once(system, user_question: str, model_name: str = 'gpt-3.5-turbo') -> str:
+
+    logger.info(f"using model {model_name}")
 
     for i in range(20):
         try:
             response = openai.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=model_name,
                 messages=[
                     {"role": "system", "content": system},
                     {"role": "user", "content": user_question},

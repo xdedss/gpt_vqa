@@ -82,7 +82,7 @@ Here is the user's request:
 
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt)
+        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
 
         self.log('llm reply:')
         self.log(res)
@@ -128,7 +128,7 @@ Outputs:
 Note:
 {tool.description}
 
-'''
+'''# for testing purposes, remove tool.descriptions
         
         action_history_desc = ''
         for action_history in self.action_history_array:
@@ -165,7 +165,7 @@ Here is the user's request:
         self.log(prompt)
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt)
+        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
 
         self.log('llm reply:')
         self.log(res)
