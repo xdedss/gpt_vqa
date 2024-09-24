@@ -3,7 +3,7 @@ import json
 import numpy as np
 
 # Connect to the SQLite database
-conn = sqlite3.connect('with_det_960.db')
+conn = sqlite3.connect('with_det_1k_real.db')
 cursor = conn.cursor()
 
 # Define the table name
@@ -31,7 +31,11 @@ for row in rows:
     label_type = info_obj['label_type']
     q = row_dict['question']
 
-    evaluation_res = json.loads(row_dict['flag'])
+    # print(row_dict['flag'])
+    if (row_dict['flag'] == 'error'):
+        evaluation_res = {'ans': False, 'plan': False}
+    else:
+        evaluation_res = json.loads(row_dict['flag'])
     # is_correct = row_dict['answer'].strip() == row_dict['answer_gt'].strip()
 
     cat = label_type
@@ -45,6 +49,11 @@ for row in rows:
             cat = 'existence_building'
         else:
             cat = 'existence'
+    if (label_type == 'area'):
+        if ('building' in q):
+            cat = 'area_building'
+        else:
+            cat = 'area'
     
     if (label_type not in ['seg', 'det']):
         # check ans
@@ -61,10 +70,10 @@ for row in rows:
     all_plans.append(evaluation_res['plan'])
     
 
-print('all', round(np.mean(all_results), 6))
+print('recognition: all', round(np.mean(all_results), 6))
 print({k: round(np.mean(cat_results[k]), 6) for k in cat_results})
 
-print('all', round(np.mean(all_plans), 6))
+print('planning: all', round(np.mean(all_plans), 6))
 print({k: round(np.mean(cat_plans[k]), 6) for k in cat_plans})
 
 # Close the database connection
