@@ -42,13 +42,37 @@ def send_visualglm_api(image_path, question) -> str:
     data = json.dumps(payload)
     
     # Send the request to the server
-    url = "http://127.0.0.1:8080"
+    url = "http://172.17.135.64:8081"
     headers = {"Content-Type": "application/json"}
     response = requests.post(url, headers=headers, data=data)
     
     # Parse the response and return the "result"
     response_data = response.json()
     return response_data.get("result", ""), []
+
+def send_geochat_api(image_path, question):
+    # Read and encode the image in base64
+    with open(image_path, "rb") as image_file:
+        data = image_file.read()
+        encoded_image = base64.b64encode(data).decode("utf-8")
+    print("image_data:", data[:100], len(data))
+    
+    # Prepare the JSON payload
+    payload = {
+        "image": encoded_image,
+        "text": question,
+    }
+    
+    data = json.dumps(payload)
+    
+    # Send the request to the server
+    url = "http://172.17.135.64:8080"
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(url, headers=headers, data=data)
+    
+    # Parse the response and return the "result"
+    response_data = response.json()
+    return response_data.get("result", "invalid"), []
 
 def get_answer_call_api(api_url, image_path, text) -> str:
     # Create a dictionary with the files to be sent
@@ -108,6 +132,9 @@ def get_answer(question, label_path, det_label_path, feedback=False, need_confir
 
     agent_cfg = CN()
     agent_cfg.model_name = model_name
+    # agent_cfg.model_name = "deepseek-ai/deepseek-llm-7b-chat"# model_name
+    # agent_cfg.base_url = "http://172.17.135.64:8000/v1"
+    # agent_cfg.api_key = "aa"
     if (feedback):
         a = SimpleAgentFeedback(agent_cfg)
     else:
@@ -170,6 +197,13 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
     #     label_path,
     #     question)
     # logger.info("visualglm answer")
+
+    # geochat
+    # answer, action_history = send_geochat_api(
+    #     label_path,
+    #     question)
+    # logger.info("geochat answer")
+
     logger.info(answer)
 
     # check what get called
@@ -193,7 +227,7 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
         plan_correct = plan_correct and plan_criteria[plan_item]
 
 
-    if (label_type == 'seg'):
+    if (label_type in ['seg', 'det']):
         # the agent must call segmentation
         ans_correct = "invalid"
     else:
@@ -317,12 +351,13 @@ if __name__ == '__main__':
     # print(res)
     # xx
 
+
     evaluate_all(
-        'rescuenet_regen_plus_det/rescuenet_agent_val_small_960.jsonl',
+        'rescuenet_regen_plus_det/rescuenet_agent_val_1k_real_tier2.jsonl',
         start_index=0,
         end_index=None,
         feedback=feedback, 
-        db_path='with_det_960.db')
+        db_path='with_det_1k_real_tier2.db')
 
 
 
