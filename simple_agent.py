@@ -38,13 +38,16 @@ class SimpleAgent(AgentBase):
             tool: Tool = self.tools[tool_id]
             inputs_str = json.dumps(tool.inputs)
             outputs_str = json.dumps(tool.outputs)
+            tool_note_part = ''
+            if (self.cfg.get('tool_desc', True)):
+                tool_note_part=f'''Note:
+{tool.description}'''
             tool_desc += f'''Tool ID: {tool_id}
 Inputs:
 {inputs_str}
 Outputs:
 {outputs_str}
-Note:
-{tool.description}
+{tool_note_part}
 
 '''
         resource_desc = ''
@@ -82,7 +85,13 @@ Here is the user's request:
 
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
+        res = oaapi.ask_once(
+            'You are a helpful assistant', 
+            prompt, 
+            self.cfg.model_name, 
+            self.cfg.get("api_key", None),
+            self.cfg.get("base_url", None),
+            )
 
         self.log('llm reply:')
         self.log(res)
@@ -165,7 +174,13 @@ Here is the user's request:
         self.log(prompt)
         self.log('call api')
         self.ask_confirm()
-        res = oaapi.ask_once('You are a helpful assistant', prompt, self.cfg.model_name)
+        res = oaapi.ask_once(
+            'You are a helpful assistant', 
+            prompt, 
+            self.cfg.model_name,
+            self.cfg.get("api_key", None),
+            self.cfg.get("base_url", None),
+            )
 
         self.log('llm reply:')
         self.log(res)

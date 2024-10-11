@@ -88,7 +88,7 @@ def get_answer_call_api(api_url, image_path, text) -> str:
     return response.text, []
 
 
-def get_answer(question, label_path, det_label_path, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo'):
+def get_answer(question, label_path, det_label_path, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo', disable_tool_desc=False, disable_aux_tool=False):
     ''' returns ans, action_history '''
 
     label_img = cv2.imread(label_path, cv2.IMREAD_GRAYSCALE)
@@ -132,6 +132,7 @@ def get_answer(question, label_path, det_label_path, feedback=False, need_confir
 
     agent_cfg = CN()
     agent_cfg.model_name = model_name
+    agent_cfg.tool_desc = not disable_tool_desc
     # agent_cfg.model_name = "deepseek-ai/deepseek-llm-7b-chat"# model_name
     # agent_cfg.base_url = "http://172.17.135.64:8000/v1"
     # agent_cfg.api_key = "aa"
@@ -149,19 +150,21 @@ def get_answer(question, label_path, det_label_path, feedback=False, need_confir
         ImageMetaTool(
             'det', 
             f'this tool takes an image, performs object detection, and returns an array of objects, possibly of the following types: {json.dumps(obj_casual_names)}', output_type='json'))
-    a.add_tool(
-        'mask_area_calculation',
-        MaskArea(sqmeter_per_px=0.02**2))
-    # a.add_tool(
-    #     'mask_count',
-    #     MaskCount())
-    a.add_tool(
-        'object_count',
-        DetectionCounting(),
-    )
-    a.add_tool(
-        'mask_path_finding',
-        MaskPathFinding())
+    
+    if (not disable_aux_tool):
+        a.add_tool(
+            'mask_area_calculation',
+            MaskArea(sqmeter_per_px=0.02**2))
+        # a.add_tool(
+        #     'mask_count',
+        #     MaskCount())
+        a.add_tool(
+            'object_count',
+            DetectionCounting(),
+        )
+        a.add_tool(
+            'mask_path_finding',
+            MaskPathFinding())
     
     # a.add_tool('python', PythonTool())
     a.add_resource('input', ImageResource(None, meta={
@@ -183,14 +186,23 @@ def count_det_label(data, label):
             count += 1
     return count
 
-def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_type, feedback=False, need_confirm=False):
+def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_type, feedback=False, need_confirm=False, model_name='gpt-3.5-turbo', disable_tool_desc=False, disable_aux_tool=False):
 
     logger.info(f'QUESTION:\n{question}\nANSWER GT:\n{answer_gt}')
     if (need_confirm):
         input('continue?')
 
     # call the agent
-    answer, action_history = get_answer(question, label_path, det_label_path, feedback, need_confirm, 'gpt-4o-mini')
+    answer, action_history = get_answer(
+        question, 
+        label_path, 
+        det_label_path, 
+        feedback, 
+        need_confirm, 
+        model_name=model_name, 
+        disable_tool_desc=disable_tool_desc,
+        disable_aux_tool=disable_aux_tool,
+        )
 
     # answer, action_history = send_visualglm_api(
     #     # 'http://127.0.0.1:8000/inference', 
@@ -244,7 +256,7 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
     return answer, correctness, action_history
 
 
-def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='default_rescuenet.db', feedback=False, need_confirm=False):
+def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='default_rescuenet.db', feedback=False, need_confirm=False, model_name='gpt-3.5-turbo', disable_tool_desc=False, disable_aux_tool=False):
     
     with open(dataset_jsonl, 'r') as f:
         valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
@@ -266,7 +278,19 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
         meta_data['label_path'] = label_path
           
         try:
-            answer, correctness, action_history = evaluate(question, label_path, det_label_path, gt_answer, gt_plan, label_type, feedback=feedback, need_confirm=need_confirm)
+            answer, correctness, action_history = evaluate(
+                question, 
+                label_path, 
+                det_label_path, 
+                gt_answer, 
+                gt_plan, 
+                label_type, 
+                feedback=feedback, 
+                need_confirm=need_confirm,
+                model_name=model_name,
+                disable_tool_desc=disable_tool_desc,
+                disable_aux_tool=disable_aux_tool,
+                )
             meta_data['action_history'] = [
                 {'action': action.action, 'action_result': action.action_result} for action in action_history
             ]
