@@ -99,6 +99,8 @@ Here is the user's request:
         self.log('llm reply:')
         self.log(res)
 
+        self.history['chat'].append((prompt, res))
+
         parser = LastJsonParser()
         res_json = parser.parse(res)
         jsonschema.validate(res_json, {
@@ -154,6 +156,8 @@ Note:
         if (resource_desc.strip() == ''):
             resource_desc = 'There is no resource in database'
         
+        self.history['resource_desc'] = resource_desc
+        
 
         prompt = f'''{self.CONTEXT}
 Now you will perform the third stage: summarizing. Firstly you will describe what tool you have used and how you used it in natural language. Next, you will summarize whether the plan to solve user's request is successful. Finally, you will respond to the user's request with a clear answer.
@@ -182,6 +186,8 @@ Here is the user's request:
 
         self.log('llm reply:')
         self.log(res)
+        
+        self.history['chat'].append((prompt, res))
 
         return res
 

@@ -177,7 +177,7 @@ def get_answer(question, label_path, det_label_path, feedback=False, need_confir
         res = a.chat_feedback(request)
     else:
         res = a.chat(request)
-    return res, a.action_history_array
+    return res, a.action_history_array, a.history
 
 def count_det_label(data, label):
     count = 0
@@ -193,7 +193,7 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
         input('continue?')
 
     # call the agent
-    answer, action_history = get_answer(
+    answer, action_history, chat_history = get_answer(
         question, 
         label_path, 
         det_label_path, 
@@ -253,7 +253,7 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
         'plan': plan_correct,
     }
 
-    return answer, correctness, action_history
+    return answer, correctness, action_history, chat_history
 
 
 def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='default_rescuenet.db', feedback=False, need_confirm=False, model_name='gpt-3.5-turbo', disable_tool_desc=False, disable_aux_tool=False):
@@ -278,7 +278,7 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
         meta_data['label_path'] = label_path
           
         try:
-            answer, correctness, action_history = evaluate(
+            answer, correctness, action_history, chat_history = evaluate(
                 question, 
                 label_path, 
                 det_label_path, 
@@ -294,6 +294,7 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
             meta_data['action_history'] = [
                 {'action': action.action, 'action_result': action.action_result} for action in action_history
             ]
+            meta_data['chat_history'] = chat_history
             db = database_sqlite.Database(db_path)
             db.add_data(
                 image_id, question, answer, gt_answer, 
@@ -324,6 +325,40 @@ def evaluate_all(dataset_jsonl: str, *, start_index=0, end_index=None, db_path='
     #         done, tasks = ray.wait(tasks, num_returns=1)
     #         pbar.update(len(done))
     #         time.sleep(0.1)
+
+
+def free_test():
+    import sys
+    sys.path.append('./')
+    import llm_utils
+    llm_utils.setup_root_logger(
+        filename='free_test.log', 
+        level=logging.WARNING)
+
+    # selected_id = [84]
+    selected_id = [53]
+    # question_novel = 'How many buildings are there and what level of damage do they have?'
+    question_novel = 'What is the average area of destroyed houses?'
+    with open('rescuenet_regen_plus_det/rescuenet_agent_val_1k_real.jsonl', 'r') as f:
+        valset_objects = [json.loads(s) for s in f.readlines() if s.strip() != '']
+
+    for id in selected_id:
+        obj = valset_objects[id]
+
+        label_path = obj['label']
+        det_label_path = obj['det_label']
+        question = obj['instruction']
+        gt_answer = obj['answer']
+        label_type = obj['type']
+        logger.info('-------- label info ---------')
+        logger.info(f'path: {label_path}')
+        logger.info(f'question: {question}')
+        logger.info(f'answer: {gt_answer}')
+        logger.info(f'label_type: {label_type}')
+        logger.info('-------- label info ---------')
+
+        res = get_answer(question_novel, label_path, det_label_path, model_name='gpt-4o-mini', need_confirm=False)
+        print(res)
 
 
 if __name__ == '__main__':

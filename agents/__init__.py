@@ -34,6 +34,7 @@ class AgentBase():
 
     def __init__(self, cfg_node: CN):
         self.cfg = cfg_node
+        self.history = {'chat': [], 'resource_desc': None}
         self.resources = dict()
         self.tools = dict()
         self.action_history_array: List[ActionHistory] = []
