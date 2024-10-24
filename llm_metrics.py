@@ -37,7 +37,7 @@ Compare the answer in the response to the ground truth. You are going to assess 
 Here are guidelines:
 1. If the question is about counting and the answer denies the existence of the required object, we consider it equivalent to answering with number 0.
 2. For questions about counting, the quantity in the answer must be exactly equal to the ground truth.
-3. For questions about areas, the answer is considered correct only if the absolute error is less than 1 square meters or the relative error is less than 10%.
+3. For questions about areas, the answer is considered correct if any of the following requirements are met: (1) the absolute error is less than 1 square meters (2) the relative error is less than 10%.
 
 You should first explain your thought and your assessment. Finally you should summarize your assessment with strict json format: {json_str}
 '''.strip()

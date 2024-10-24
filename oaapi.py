@@ -9,13 +9,82 @@ logger = logging.getLogger('oaapi')
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 openai.base_url = os.environ.get('OPENAI_API_BASE')
 
-def ask_once(system, user_question: str, model_name: str = 'gpt-3.5-turbo') -> str:
+def completion_once(prompt: str, base_url: str, model_name: str, stop=None) -> str:
 
     logger.info(f"using model {model_name}")
 
+    client = openai.OpenAI(
+        base_url=base_url,
+        api_key="token-abc123",
+    )
+
     for i in range(20):
         try:
-            response = openai.chat.completions.create(
+            
+            completion = client.completions.create(
+                model=model_name,
+                prompt=prompt,
+                temperature=0.0,
+                max_tokens=1024,
+                stop=stop,
+            )
+            text = completion.choices[0].text
+            return (text)
+
+        except openai.RateLimitError:
+            # we should try again later
+            wait_time = min(2 ** i, 30)
+            logger.warn(f'openai rate limit, retry #{i+1} after {wait_time} s')
+            time.sleep(wait_time)
+
+
+def ask_once(system, user_question: str, model_name: str = 'gpt-3.5-turbo', api_key=None, base_url=None) -> str:
+
+    logger.info(f"using model {model_name}")
+
+    if (api_key is not None and base_url is not None):
+        client = openai.OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+        )
+    else:
+        client = openai
+
+    for i in range(20):
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user_question},
+                ],
+                temperature=0.7,
+            )
+            text = response.choices[0].message.content
+            return (text)
+
+        except openai.RateLimitError:
+            # we should try again later
+            wait_time = min(2 ** i, 30)
+            logger.warn(f'openai rate limit, retry #{i+1} after {wait_time} s')
+            time.sleep(wait_time)
+
+
+def ask_once_image(system, image_path: str, user_question: str, model_name: str = 'gpt-3.5-turbo', api_key=None, base_url=None) -> str:
+
+    logger.info(f"using model {model_name}")
+
+    if (api_key is not None and base_url is not None):
+        client = openai.OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+        )
+    else:
+        client = openai
+
+    for i in range(20):
+        try:
+            response = client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "system", "content": system},
