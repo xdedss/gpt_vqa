@@ -2,6 +2,7 @@
 from yacs.config import CfgNode as CN
 import simple_agent
 from simple_agent import SimpleAgent
+from simple_agent_tuned import SimpleAgent as SimpleAgentTuned
 from simple_agent_feedback import SimpleAgent as SimpleAgentFeedback
 from agents import AgentBase
 from agents.environment import Tool, ToolError, Resource
@@ -26,6 +27,24 @@ import llm_utils
 
 logger = logging.getLogger()
 
+
+def convert_to_org_image_path(input_path):
+    # Parse the path
+    directory, file_name = os.path.split(input_path)
+    parent_dir, label_folder = os.path.split(directory)
+    
+    # Ensure the label folder matches the '-label-img' structure
+    if "label-img" in label_folder:
+        yyy = label_folder.split("-label-img")[0] # val/train
+        
+        # Form the new directory path and file path for output
+        src_dir = os.path.join(parent_dir, f"{yyy}-org-img")
+        src_fname = file_name.replace("_lab.png", ".jpg")
+        full_path = os.path.join(src_dir, src_fname)
+        return full_path
+    else:
+        print("Input path does not match the expected structure.")
+        raise ValueError(input_path)
 
 def send_visualglm_api(image_path, question) -> str:
     # Encode the image in base64
@@ -133,13 +152,17 @@ def get_answer(question, label_path, det_label_path, feedback=False, need_confir
     agent_cfg = CN()
     agent_cfg.model_name = model_name
     agent_cfg.tool_desc = not disable_tool_desc
-    # agent_cfg.model_name = "deepseek-ai/deepseek-llm-7b-chat"# model_name
+    # agent_cfg.model_name = "meta-llama/Llama-3.1-8B-Instruct"# model_name
     # agent_cfg.base_url = "http://172.17.135.64:8000/v1"
     # agent_cfg.api_key = "aa"
     if (feedback):
         a = SimpleAgentFeedback(agent_cfg)
     else:
         a = SimpleAgent(agent_cfg)
+
+        agent_cfg.api_key = "aa"
+        agent_cfg.base_url = 'http://localhost:8001/v1'
+        a = SimpleAgentTuned(agent_cfg)
     a.add_tool(
         'semantic_segmentation', 
         ImageMetaTool(
@@ -192,17 +215,19 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
     if (need_confirm):
         input('continue?')
 
-    # call the agent
-    answer, action_history, chat_history = get_answer(
-        question, 
-        label_path, 
-        det_label_path, 
-        feedback, 
-        need_confirm, 
-        model_name=model_name, 
-        disable_tool_desc=disable_tool_desc,
-        disable_aux_tool=disable_aux_tool,
-        )
+    action_history = []
+    chat_history = dict()
+    # # call the agent
+    # answer, action_history, chat_history = get_answer(
+    #     question, 
+    #     label_path, 
+    #     det_label_path, 
+    #     feedback, 
+    #     need_confirm, 
+    #     model_name=model_name, 
+    #     disable_tool_desc=disable_tool_desc,
+    #     disable_aux_tool=disable_aux_tool,
+    #     )
 
     # answer, action_history = send_visualglm_api(
     #     # 'http://127.0.0.1:8000/inference', 
@@ -215,6 +240,15 @@ def evaluate(question, label_path, det_label_path, answer_gt, gt_plan, label_typ
     #     label_path,
     #     question)
     # logger.info("geochat answer")
+
+    # raw vision api
+    import otherapi, oaapi
+    answer = otherapi.send_claude(
+        'You are a helpful assistant, answer questions with yes/no or a number.',
+        question,
+        convert_to_org_image_path(label_path)
+    )
+
 
     logger.info(answer)
 

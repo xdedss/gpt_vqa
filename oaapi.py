@@ -3,6 +3,9 @@ import openai
 import os
 import time
 import logging
+import base64
+from PIL import Image
+from io import BytesIO
 
 logger = logging.getLogger('oaapi')
 
@@ -37,6 +40,58 @@ def completion_once(prompt: str, base_url: str, model_name: str, stop=None) -> s
             logger.warn(f'openai rate limit, retry #{i+1} after {wait_time} s')
             time.sleep(wait_time)
 
+
+def ask_once_with_image(system, user_question: str, image_path: str, model_name: str = 'gpt-4o-mini', image_resize=(512, 512), api_key=None, base_url=None) -> str:
+
+    logger.info(f"using model {model_name}")
+
+    # Open and resize the image
+    with Image.open(image_path) as img:
+        img = img.resize(image_resize)
+
+        # Convert the resized image to base64
+        buffered = BytesIO()
+        img.save(buffered, format="JPEG")
+        image_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+    if (api_key is not None and base_url is not None):
+        client = openai.OpenAI(
+            api_key=api_key,
+            base_url=base_url,
+        )
+    else:
+        client = openai
+
+    for i in range(20):
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": [
+                        {
+                            "type": "text",
+                            "text": user_question,
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url":  f"data:image/jpeg;base64,{image_data}",
+                                "detail": "low"
+                            },
+                        },
+                    ]},
+                ],
+                temperature=0.7,
+            )
+            text = response.choices[0].message.content
+            return (text)
+
+        except openai.RateLimitError:
+            # we should try again later
+            wait_time = min(2 ** i, 30)
+            logger.warn(f'openai rate limit, retry #{i+1} after {wait_time} s')
+            time.sleep(wait_time)
 
 def ask_once(system, user_question: str, model_name: str = 'gpt-3.5-turbo', api_key=None, base_url=None) -> str:
 

@@ -165,13 +165,13 @@ class DetectionCounting(Tool):
 class MaskArea(Tool):
     ''' counts area '''
     
-    description = 'This tool will calculate the area of a segmentation mask. The first input "mask_to_calc" should be the resource id of the mask to calculate area. The output should be the resource id to store the result, the second input "label_to_calc" should be the plain text of the label to calculate. The result contains information about the absolute area in square meters.'
+    description = 'This tool will count the area of a mask. The first input "mask_to_count" should be the resource id of the mask to count. The output should be the resource id to store the result, the second input "label_to_count" should be the plain text of the label to count. The result contains information about the absolute area in square pixels.'
 
     inputs = [{
-        'name': 'mask_to_calc',
+        'name': 'mask_to_count',
         'type': 'mask',
     },{
-        'name': 'label_to_calc',
+        'name': 'label_to_count',
         'type': 'text',
     }]
     outputs = [{
@@ -184,8 +184,8 @@ class MaskArea(Tool):
         self.sqmeter_per_px = sqmeter_per_px
 
     def use(self, inputs):
-        mask = inputs['mask_to_calc']
-        label = inputs['label_to_calc']
+        mask = inputs['mask_to_count']
+        label = inputs['label_to_count']
 
         assert isinstance(mask, MasksResource)
         mask = mask.data[label].astype(bool)
